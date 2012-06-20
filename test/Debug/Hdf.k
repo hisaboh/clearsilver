@@ -8,7 +8,7 @@ boolean test_setValue() {
 }
 assert(test_setValue());
 
-test_getValue() {
+void test_getValue() {
 	Hdf hdf = new Hdf();
 	hdf.setValue("key", "val");
 	hdf.setValue("key2", "あいう")
@@ -20,3 +20,10 @@ test_getValue() {
 }
 test_getValue();
 
+void test_writeString() {
+	Hdf hdf = new Hdf();
+	hdf.setValue("key", "value");
+	hdf.setValue("abc.cde.efg", "efg val");
+	System.p(hdf.writeString());
+}
+test_writeString();

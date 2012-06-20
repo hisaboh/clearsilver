@@ -1,5 +1,12 @@
- - (Hdf.k:14) val
- - (Hdf.k:15) defval
+ - (Hdf.k:16) val
+ - (Hdf.k:17) defval
  - (Hdf.k:18) あいう
  - (Hdf.k:19) あああ
+ - (Hdf.k:27) key = value
+abc {
+cde {
+efg = efg val
+}
+}
+
 Q.E.D.

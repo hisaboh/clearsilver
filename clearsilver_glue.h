@@ -103,6 +103,7 @@ static KMETHOD Hdf_writeString(CTX, ksfp_t *sfp _RIX)
 	char *ret = NULL;
 	NEOERR* err;
 	err = hdf_write_string(hdf, &ret);
+	// TODO: エラー処理
 	RETURN_(new_kString(ret, strlen(ret), 0));
 }
 
