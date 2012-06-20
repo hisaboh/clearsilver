@@ -27,3 +27,12 @@ void test_writeString() {
 	System.p(hdf.writeString());
 }
 test_writeString();
+
+boolean test_dump() {
+	Hdf hdf = new Hdf();
+	hdf.setValue("key", "value");
+	hdf.setValue("abc.cde.efg", "efg val");
+	hdf.dump("prefix");
+	return true;
+}
+assert(test_dump());
