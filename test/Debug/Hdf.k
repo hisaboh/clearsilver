@@ -8,7 +8,7 @@ boolean test_setValue() {
 }
 assert(test_setValue());
 
-boolean test_getValue() {
+test_getValue() {
 	Hdf hdf = new Hdf();
 	hdf.setValue("key", "val");
 	hdf.setValue("key2", "あいう")
