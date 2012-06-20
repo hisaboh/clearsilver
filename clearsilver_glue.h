@@ -31,6 +31,7 @@ extern "C" {
 
 #include <ClearSilver/ClearSilver.h>
 #include <ClearSilver/cgi/cgi.h>
+#include <konoha2/konoha2.h>
 
 /* ======================================================================== */
 
@@ -50,6 +51,7 @@ static void kHdf_init(CTX, kObject *o, void *conf)
 {
 	kHdf *h = (kHdf *)o;
 	hdf_init(&h->hdf);
+	// printf("init:%p\n", o);
 }
 
 static void kHdf_free(CTX, kObject *o)
@@ -67,6 +69,7 @@ static void kHdf_free(CTX, kObject *o)
 //## Hdf Hdf.new();
 static KMETHOD Hdf_new(CTX, ksfp_t *sfp _RIX)
 {
+	// printf("new:%p\n", sfp[K_RTNIDX].o);
 	RETURN_(new_kObject(O_ct(sfp[K_RTNIDX].o), 0));
 }
 
@@ -79,6 +82,109 @@ static KMETHOD Hdf_setValue(CTX, ksfp_t *sfp _RIX)
 	hdf_set_value(hdf, name, value);
 	RETURNvoid_();
 }
+
+//## String Hdf.getValue(String name, String defaultValue)
+// This method retrieves a string value from the HDF dataset. The hdfpath is a dotted path of the form "A.B.C".
+static KMETHOD Hdf_getValue(CTX, ksfp_t *sfp _RIX)
+{
+	HDF *hdf = RawPtr_to(HDF *, sfp[0]);
+	const char *name = S_text(sfp[1].s);
+	const char *defaultValue = S_text(sfp[2].s);
+	const char *value = hdf_get_value(hdf, name, defaultValue);
+	RETURN_(new_kString(value, strlen(value), 0));
+}
+
+
+//## String Hdf.writeString()
+// serializes HDF contents to a string
+static KMETHOD Hdf_writeString(CTX, ksfp_t *sfp _RIX)
+{
+	HDF *hdf = RawPtr_to(HDF *, sfp[0]);
+	char *ret = NULL;
+	NEOERR* err;
+	err = hdf_write_string(hdf, &ret);
+	RETURN_(new_kString(ret, strlen(ret), 0));
+}
+
+// void close()
+// Cleans up the underlying HDF JNI non-managed memory. This call is ignored on non-root nodes. Java's GC doesn't understand how much memory is being held by the HDF wrapper, and its destruction can be delayed. In a high-load server, that can lead to a lot of memory waiting around to be re-claimed. Calling this method will free that memory immediately.
+
+// void readFile(String filename)
+// This method reads the contends of an on-disk HDF dataset into the current HDF object.
+
+// String fileLoad(String filename)
+// A protected method used as a callback from the JNI code to enable file load wrappers to be written in Java.
+
+// CSFileLoader getFileLoader()
+// Returns the current CSFileLoader
+
+// void setFileLoader(CSFileLoader)
+// Sets the file loader for the HDF to use to load files
+
+// boolean writeFile(String filename)
+// writes/serializes HDF dataset to file
+
+// boolean writeFileAtomic(String filename)
+// like writeFile, but first writes to a temp file then uses rename(2) to ensure updates are Atomic
+
+// boolean readString(String data)
+// parses/loads the contents of the given string as HDF into the current HDF object
+
+// int getIntValue(String hdfpath, int defaultValue)
+// This method retrieves an integer value from the HDF dataset. The hdfpath is a dotted path of the form "A.B.C".
+// void setValue(String hdfpath, String newValue)
+// This method adds a string value to the HDF dataset.
+// void removeTree(String hdfpath)
+// Remove all nodes of the HDF subtree at hdfpath
+// void setSymLink(String hdfpathSrc, hdfpathDest)
+// Links the src hdfpath to the dest
+// void exportDate(String hdfpath, TimeZone timeZone, Date date)
+// Export date to an HDF tree using the specified timeZone. Matches the output of the C CGIKit's export_date* functions. Output is:
+// hdfpath.sec
+// hdfpath.min
+// hdfpath.24hour
+// hdfpath.hour
+// hdfpath.am
+// hdfpath.mday
+// hdfpath.mon
+// hdfpath.year
+// hdfpath.2yr
+// hdfpath.wday
+// hdfpath.tzoffset
+// void exportDate(String hdfpath, String tz, int tt)
+// Same as above exportDate but with a string representation of TimeZone, and a time_t as the Date (seconds since the epoch)
+// HDF getObj(String hdfpath)
+// This method allows you to retrieve the HDF object which represents the HDF subtree ad the named hdfpath.
+// HDF getChild(String hdfpath)
+// Retrieves the HDF for the first child of the root of the subtree at hdfpath, or null if no child exists of that path or if the path doesn't exist.
+// HDF getRootObj()
+// Return the root of the tree that this node is in.
+// HDF getOrCreateObj(String hdfpath)
+// Retrieves the HDF object that is the root of the subtree at hdfpath, create the subtree if it doesn't exist
+// String objName()
+// This method retrieves the name of the current HDF node. The name only includes the current level. Here is a sample code snippit:
+//   HDF hdf = new HDF();
+//   hdf.setValue("A.B.C","1");
+//   HDF hdf_subnode = hdf.getObj("A.B.C");
+// 
+//   // this will print "C"
+//   System.out.println(hdf_subnode.objName());
+// String objValue()
+// This method retrieves the value of the current HDF node. Here is a sample code snippit:
+//   HDF hdf = new HDF();
+//   hdf.setValue("A.B.C","1");
+//   HDF hdf_subnode = hdf.getObj("A.B.C");
+// 
+//   // this will print "1"
+//   System.out.println(hdf_subnode.objValue());
+// HDF objChild()
+// This method is used to walk the HDF tree. Keep in mind that every node in the tree can have a value, a child, and a next peer.
+// HDF objNext()
+// This method is used to walk the HDF tree to the next peer.
+// void copy(String hdfpath, HDF src)
+// Copy the HDF tree src to the destination path hdfpath in this HDF tree. src may be in this path or not. Result is undefined for overlapping source and destination.
+// String dump()
+// Serializes the HDF tree to a String in a slightly different format than writeString().
 
 #define CT_Hdf cHdf
 #define TY_Hdf cHdf->cid
@@ -100,6 +206,8 @@ static kbool_t clearsilver_initPackage(CTX, kKonohaSpace *ks, int argc, const ch
 	intptr_t MethodData[] = {
 		_Public, _F(Hdf_new)     , TY_Hdf , TY_Hdf, MN_("new"), 0,
 		_Public, _F(Hdf_setValue), TY_void, TY_Hdf, MN_("setValue"), 2, TY_String, FN_("name"), TY_String, FN_("value"),
+		_Public, _F(Hdf_getValue), TY_String, TY_Hdf, MN_("getValue"), 2, TY_String, FN_("name"), TY_String, FN_("defaultValue"),
+		_Public, _F(Hdf_writeString), TY_String, TY_Hdf, MN_("writeString"), 0, 
 		DEND,
 	};
 	kKonohaSpace_loadMethodData(ks, MethodData);
