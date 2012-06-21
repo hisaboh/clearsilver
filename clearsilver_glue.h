@@ -131,6 +131,22 @@ static KMETHOD Hdf_getObj(CTX, ksfp_t *sfp _RIX)
 	obj->hdf = retHdf;
 	RETURN_(obj);
 }
+//## String Hdf.objValue()
+// This method retrieves the value of the current HDF node. Here is a sample code snippit:
+//   HDF hdf = new HDF();
+//   hdf.setValue("A.B.C","1");
+//   HDF hdf_subnode = hdf.getObj("A.B.C");
+// 
+//   // this will print "1"
+//   System.p(hdf_subnode.objValue());
+static KMETHOD Hdf_objValue(CTX, ksfp_t *sfp _RIX)
+{
+	HDF *hdf = RawPtr_to(HDF *, sfp[0]);
+	char *value = hdf_obj_value(hdf);
+
+	if (value == NULL) RETURN_(K_NULL);
+	RETURN_(new_kString(value, strlen(value), 0));
+}
 
 
 // void close()
@@ -194,14 +210,6 @@ static KMETHOD Hdf_getObj(CTX, ksfp_t *sfp _RIX)
 // 
 //   // this will print "C"
 //   System.out.println(hdf_subnode.objName());
-// String objValue()
-// This method retrieves the value of the current HDF node. Here is a sample code snippit:
-//   HDF hdf = new HDF();
-//   hdf.setValue("A.B.C","1");
-//   HDF hdf_subnode = hdf.getObj("A.B.C");
-// 
-//   // this will print "1"
-//   System.out.println(hdf_subnode.objValue());
 // HDF objChild()
 // This method is used to walk the HDF tree. Keep in mind that every node in the tree can have a value, a child, and a next peer.
 // HDF objNext()
@@ -233,6 +241,7 @@ static kbool_t clearsilver_initPackage(CTX, kKonohaSpace *ks, int argc, const ch
 		_Public, _F(Hdf_writeString), TY_String, TY_Hdf, MN_("writeString"), 0, 
 		_Public, _F(Hdf_dump), TY_void, TY_Hdf, MN_("dump"), 1, TY_String, FN_("prefix"),
 		_Public, _F(Hdf_getObj), TY_Hdf, TY_Hdf, MN_("getObj"), 1, TY_String, FN_("name"),
+		_Public, _F(Hdf_objValue), TY_String, TY_Hdf, MN_("objValue"), 0, 
 		DEND,
 	};
 	kKonohaSpace_loadMethodData(ks, MethodData);

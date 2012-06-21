@@ -44,3 +44,14 @@ void test_getObj() {
 	System.p(obj.writeString());
 }
 test_getObj();
+
+void test_objValue() {
+	Hdf hdf = new Hdf();
+	hdf.setValue("abc.cde", "efg val");
+	Hdf subnode1 = hdf.getObj("abc");
+	Hdf subnode2 = hdf.getObj("abc.cde");
+	System.p(hdf.objValue());
+	System.p(subnode1.objValue());
+	System.p(subnode2.objValue());
+}
+test_objValue();
