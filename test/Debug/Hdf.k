@@ -36,3 +36,11 @@ boolean test_dump() {
 	return true;
 }
 assert(test_dump());
+
+void test_getObj() {
+	Hdf hdf = new Hdf();
+	hdf.setValue("abc.cde.efg", "efg val");
+	Hdf obj = hdf.getObj("abc");
+	System.p(obj.writeString());
+}
+test_getObj();

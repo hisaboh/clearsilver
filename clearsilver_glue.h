@@ -120,6 +120,18 @@ static KMETHOD Hdf_dump(CTX, ksfp_t *sfp _RIX)
 	RETURNvoid_();
 }
 
+//## HDF Hdf.getObj(String hdfpath)
+// This method allows you to retrieve the HDF object which represents the HDF subtree ad the named hdfpath.
+static KMETHOD Hdf_getObj(CTX, ksfp_t *sfp _RIX)
+{
+	HDF *hdf = RawPtr_to(HDF *, sfp[0]);
+	const char *name = S_text(sfp[1].s);
+	HDF *retHdf = hdf_get_obj(hdf, name);
+	kHdf *obj = (kHdf*)new_kObject(O_ct(sfp[K_RTNIDX].o), NULL);
+	obj->hdf = retHdf;
+	RETURN_(obj);
+}
+
 
 // void close()
 // Cleans up the underlying HDF JNI non-managed memory. This call is ignored on non-root nodes. Java's GC doesn't understand how much memory is being held by the HDF wrapper, and its destruction can be delayed. In a high-load server, that can lead to a lot of memory waiting around to be re-claimed. Calling this method will free that memory immediately.
@@ -168,8 +180,6 @@ static KMETHOD Hdf_dump(CTX, ksfp_t *sfp _RIX)
 // hdfpath.tzoffset
 // void exportDate(String hdfpath, String tz, int tt)
 // Same as above exportDate but with a string representation of TimeZone, and a time_t as the Date (seconds since the epoch)
-// HDF getObj(String hdfpath)
-// This method allows you to retrieve the HDF object which represents the HDF subtree ad the named hdfpath.
 // HDF getChild(String hdfpath)
 // Retrieves the HDF for the first child of the root of the subtree at hdfpath, or null if no child exists of that path or if the path doesn't exist.
 // HDF getRootObj()
@@ -222,6 +232,7 @@ static kbool_t clearsilver_initPackage(CTX, kKonohaSpace *ks, int argc, const ch
 		_Public, _F(Hdf_getValue), TY_String, TY_Hdf, MN_("getValue"), 2, TY_String, FN_("name"), TY_String, FN_("defaultValue"),
 		_Public, _F(Hdf_writeString), TY_String, TY_Hdf, MN_("writeString"), 0, 
 		_Public, _F(Hdf_dump), TY_void, TY_Hdf, MN_("dump"), 1, TY_String, FN_("prefix"),
+		_Public, _F(Hdf_getObj), TY_Hdf, TY_Hdf, MN_("getObj"), 1, TY_String, FN_("name"),
 		DEND,
 	};
 	kKonohaSpace_loadMethodData(ks, MethodData);
