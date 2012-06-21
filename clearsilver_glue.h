@@ -235,13 +235,13 @@ static kbool_t clearsilver_initPackage(CTX, kKonohaSpace *ks, int argc, const ch
 #define _Public   kMethod_Public
 #define _F(F)   (intptr_t)(F)
 	intptr_t MethodData[] = {
-		_Public, _F(Hdf_new)     , TY_Hdf , TY_Hdf, MN_("new"), 0,
-		_Public, _F(Hdf_setValue), TY_void, TY_Hdf, MN_("setValue"), 2, TY_String, FN_("name"), TY_String, FN_("value"),
-		_Public, _F(Hdf_getValue), TY_String, TY_Hdf, MN_("getValue"), 2, TY_String, FN_("name"), TY_String, FN_("defaultValue"),
-		_Public, _F(Hdf_writeString), TY_String, TY_Hdf, MN_("writeString"), 0, 
-		_Public, _F(Hdf_dump), TY_void, TY_Hdf, MN_("dump"), 1, TY_String, FN_("prefix"),
-		_Public, _F(Hdf_getObj), TY_Hdf, TY_Hdf, MN_("getObj"), 1, TY_String, FN_("name"),
-		_Public, _F(Hdf_objValue), TY_String, TY_Hdf, MN_("objValue"), 0, 
+		_Public, _F(Hdf_new)     	, TY_Hdf 	, TY_Hdf, MN_("new")		, 0,
+		_Public, _F(Hdf_setValue)	, TY_void	, TY_Hdf, MN_("setValue")	, 2, TY_String, FN_("name"), TY_String, FN_("value"),
+		_Public, _F(Hdf_getValue)	, TY_String	, TY_Hdf, MN_("getValue")	, 2, TY_String, FN_("name"), TY_String, FN_("defaultValue"),
+		_Public, _F(Hdf_writeString), TY_String	, TY_Hdf, MN_("writeString"), 0, 
+		_Public, _F(Hdf_dump)		, TY_void	, TY_Hdf, MN_("dump")		, 1, TY_String, FN_("prefix"),
+		_Public, _F(Hdf_getObj)		, TY_Hdf	, TY_Hdf, MN_("getObj")		, 1, TY_String, FN_("name"),
+		_Public, _F(Hdf_objValue)	, TY_String	, TY_Hdf, MN_("objValue")	, 0, 
 		DEND,
 	};
 	kKonohaSpace_loadMethodData(ks, MethodData);
