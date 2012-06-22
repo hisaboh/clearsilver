@@ -71,6 +71,7 @@ void test_copy() {
 	hdf.setValue("key", "value");
 	Hdf src = new Hdf();
 	src.setValue("srcKey", "value");
+	hdf.copy("", src);
 	hdf.copy("src", src);
 	System.p(hdf.writeString());
 }
