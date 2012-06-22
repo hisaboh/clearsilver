@@ -41,7 +41,10 @@ void test_getObj() {
 	Hdf hdf = new Hdf();
 	hdf.setValue("abc.cde.efg", "efg val");
 	Hdf obj = hdf.getObj("abc");
+	Hdf notExist = hdf.getObj("c.d.e");
 	System.p(obj.writeString());
+	System.p(notExist.writeString());
+	System.p(hdf.writeString());
 }
 test_getObj();
 
@@ -76,3 +79,14 @@ void test_copy() {
 	System.p(hdf.writeString());
 }
 test_copy();
+
+void test_getNode() {
+	Hdf hdf = new Hdf();
+	hdf.setValue("abc.cde.efg", "efg val");
+	Hdf obj = hdf.getNode("abc");
+	Hdf notExist = hdf.getNode("c.d.e");
+	System.p(obj.writeString());
+	System.p(notExist.writeString());
+	System.p(hdf.writeString());
+}
+test_getNode();

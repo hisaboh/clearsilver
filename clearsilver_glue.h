@@ -120,7 +120,7 @@ static KMETHOD Hdf_dump(CTX, ksfp_t *sfp _RIX)
 	RETURNvoid_();
 }
 
-//## HDF Hdf.getObj(String hdfpath)
+//## HDF Hdf.getObj(String name)
 // This method allows you to retrieve the HDF object which represents the HDF subtree ad the named hdfpath.
 static KMETHOD Hdf_getObj(CTX, ksfp_t *sfp _RIX)
 {
@@ -159,7 +159,7 @@ static KMETHOD Hdf_getIntValue(CTX, ksfp_t *sfp _RIX)
 	RETURNi_(hdf_get_int_value(hdf, name, defaultValue));
 }
 
-// ##void Hdf.copy(String name, HDF src)
+//## void Hdf.copy(String name, HDF src)
 // Copy the HDF tree src to the destination path hdfpath in this HDF tree. src may be in this path or not. Result is undefined for overlapping source and destination.
 static KMETHOD Hdf_copy(CTX, ksfp_t *sfp _RIX)
 {
@@ -171,6 +171,25 @@ static KMETHOD Hdf_copy(CTX, ksfp_t *sfp _RIX)
 	// TODO: エラー処理
 
 	RETURNvoid_();
+}
+
+//## Hdf Hdf.getNode(String name)
+// hdf_get_node is similar to hdf_get_obj, except instead
+// of stopping if it can't find a node in the tree, it will
+// create all of the nodes necessary to hand you back the
+// node you ask for. Nodes are created with no value. ret -> the dataset node you asked for
+// TODO: Java版にはない。削除すべきかも。
+static KMETHOD Hdf_getNode(CTX, ksfp_t *sfp _RIX)
+{
+	HDF *hdf = RawPtr_to(HDF *, sfp[0]);
+	const char *name = S_text(sfp[1].s);
+	HDF *retHdf;
+	NEOERR *err;
+	err = hdf_get_node(hdf, name, &retHdf);
+	// TODO: エラー処理
+	kHdf *obj = (kHdf*)new_kObject(O_ct(sfp[K_RTNIDX].o), NULL);
+	obj->hdf = retHdf;
+	RETURN_(obj);
 }
 
 
@@ -262,7 +281,8 @@ static kbool_t clearsilver_initPackage(CTX, kKonohaSpace *ks, int argc, const ch
 		_Public, _F(Hdf_getObj)		, TY_Hdf	, TY_Hdf, MN_("getObj")		, 1, TY_String, FN_("name"),
 		_Public, _F(Hdf_objValue)	, TY_String	, TY_Hdf, MN_("objValue")	, 0, 
 		_Public, _F(Hdf_getIntValue), TY_Int	, TY_Hdf, MN_("getIntValue"), 2, TY_String, FN_("name"), TY_Int, FN_("defaultValue"),
-		_Public, _F(Hdf_copy)		, TY_void	, TY_Hdf, MN_("copy"), 2, TY_String, FN_("name"), TY_Hdf, FN_("src"),
+		_Public, _F(Hdf_copy)		, TY_void	, TY_Hdf, MN_("copy")		, 2, TY_String, FN_("name"), TY_Hdf, FN_("src"),
+		_Public, _F(Hdf_getNode)	, TY_Hdf	, TY_Hdf, MN_("getNode")	, 1, TY_String, FN_("name"),
 		DEND,
 	};
 	kKonohaSpace_loadMethodData(ks, MethodData);

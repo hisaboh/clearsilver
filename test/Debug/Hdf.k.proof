@@ -9,20 +9,42 @@ efg = efg val
 }
 }
 
- - (Hdf.k:44) cde {
+ - (Hdf.k:45) cde {
 efg = efg val
 }
 
- - (Hdf.k:53) (null)
- - (Hdf.k:54) (null)
- - (Hdf.k:55) efg val
- - (Hdf.k:63) 1
- - (Hdf.k:64) 3
- - (Hdf.k:65) 3
- - (Hdf.k:76) key = value
+ - (Hdf.k:46) 
+ - (Hdf.k:47) abc {
+cde {
+efg = efg val
+}
+}
+
+ - (Hdf.k:56) (null)
+ - (Hdf.k:57) (null)
+ - (Hdf.k:58) efg val
+ - (Hdf.k:66) 1
+ - (Hdf.k:67) 3
+ - (Hdf.k:68) 3
+ - (Hdf.k:79) key = value
 srcKey = value
 src {
 srcKey = value
+}
+
+ - (Hdf.k:88) cde {
+efg = efg val
+}
+
+ - (Hdf.k:89) 
+ - (Hdf.k:90) abc {
+cde {
+efg = efg val
+}
+}
+c {
+d {
+}
 }
 
 Q.E.D.
