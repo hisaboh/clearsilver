@@ -1,22 +1,23 @@
 /// 対応済 ////////////////////////////////////
-# hdf_set_value
-# hdf_get_value
-# hdf_init
-# hdf_get_obj
-# hdf_destroy
-# hdf_dump
-# hdf_obj_value
-# hdf_get_int_value
-# hdf_copy
-# hdf_get_node
-# hdf_read_string
-# hdf_obj_child
-# hdf_get_child
-# hdf_obj_top
-# hdf_obj_next
-# hdf_obj_name
-# hdf_write_string
-# hdf_set_int_value
+hdf_set_value
+hdf_get_value
+hdf_init
+hdf_get_obj
+hdf_destroy
+hdf_dump
+hdf_obj_value
+hdf_get_int_value
+hdf_copy
+hdf_get_node
+hdf_read_string
+hdf_obj_child
+hdf_get_child
+hdf_obj_top
+hdf_obj_next
+hdf_obj_name
+hdf_write_string
+hdf_set_int_value
+hdf_set_copy
 
 
 /// 非対応 ////////////////////////////////////
@@ -39,7 +40,6 @@ hdf_sort_obj	// 複雑かつ用途不明のため
 hdf_dump_format
 hdf_write_file_atomic
 hdf_write_file
-hdf_set_copy
 hdf_search_path
 hdf_remove_tree
 
