@@ -174,11 +174,8 @@ static KMETHOD Hdf_copy(CTX, ksfp_t *sfp _RIX)
 }
 
 //## Hdf Hdf.getNode(String name)
-// hdf_get_node is similar to hdf_get_obj, except instead
-// of stopping if it can't find a node in the tree, it will
-// create all of the nodes necessary to hand you back the
-// node you ask for. Nodes are created with no value. ret -> the dataset node you asked for
-// TODO: Java版にはない。削除すべきかも。
+// Retrieves the HDF object that is the root of the subtree at hdfpath, create the subtree if it doesn't exist
+// TODO: Java版名称はgetOrCreateObj。Java版に合わせて修正すべきかも。
 static KMETHOD Hdf_getNode(CTX, ksfp_t *sfp _RIX)
 {
 	HDF *hdf = RawPtr_to(HDF *, sfp[0]);
@@ -240,8 +237,6 @@ static KMETHOD Hdf_getNode(CTX, ksfp_t *sfp _RIX)
 // Retrieves the HDF for the first child of the root of the subtree at hdfpath, or null if no child exists of that path or if the path doesn't exist.
 // HDF getRootObj()
 // Return the root of the tree that this node is in.
-// HDF getOrCreateObj(String hdfpath)
-// Retrieves the HDF object that is the root of the subtree at hdfpath, create the subtree if it doesn't exist
 // String objName()
 // This method retrieves the name of the current HDF node. The name only includes the current level. Here is a sample code snippit:
 //   HDF hdf = new HDF();
