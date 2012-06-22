@@ -213,7 +213,7 @@ static KMETHOD Hdf_objChild(CTX, ksfp_t *sfp _RIX)
 	RETURN_(obj);
 }
 
-//## Hdf.Hdf.objTop()
+//## Hdf Hdf.objTop()
 // Return the root of the tree that this node is in.
 // TODO: Java版の名前はgetRootObj()。Java版に合わせて修正すべきかも。
 static KMETHOD Hdf_objTop(CTX, ksfp_t *sfp _RIX)
@@ -223,6 +223,34 @@ static KMETHOD Hdf_objTop(CTX, ksfp_t *sfp _RIX)
 	kHdf *obj = (kHdf*)new_kObject(O_ct(sfp[K_RTNIDX].o), NULL);
 	obj->hdf = retHdf;
 	RETURN_(obj);
+}
+
+//## Hdf Hdf.objNext()
+// This method is used to walk the HDF tree to the next peer.
+static KMETHOD Hdf_objNext(CTX, ksfp_t *sfp _RIX)
+{
+	HDF *hdf = RawPtr_to(HDF *, sfp[0]);
+	HDF *retHdf = hdf_obj_next(hdf);
+	kHdf *obj = (kHdf*)new_kObject(O_ct(sfp[K_RTNIDX].o), NULL);
+	obj->hdf = retHdf;
+	RETURN_(obj);
+}
+
+//## String objName()
+// This method retrieves the name of the current HDF node. The name only includes the current level. Here is a sample code snippit:
+//   HDF hdf = new HDF();
+//   hdf.setValue("A.B.C","1");
+//   HDF hdf_subnode = hdf.getObj("A.B.C");
+// 
+//   // this will print "C"
+//   System.out.println(hdf_subnode.objName());
+static KMETHOD Hdf_objName(CTX, ksfp_t *sfp _RIX)
+{
+	HDF *hdf = RawPtr_to(HDF *, sfp[0]);
+	char *name = hdf_obj_name(hdf);
+
+	if (name == NULL) RETURN_(K_NULL);
+	RETURN_(new_kString(name, strlen(name), 0));
 }
 
 
@@ -269,16 +297,6 @@ static KMETHOD Hdf_objTop(CTX, ksfp_t *sfp _RIX)
 // Same as above exportDate but with a string representation of TimeZone, and a time_t as the Date (seconds since the epoch)
 // HDF getChild(String hdfpath)
 // Retrieves the HDF for the first child of the root of the subtree at hdfpath, or null if no child exists of that path or if the path doesn't exist.
-// String objName()
-// This method retrieves the name of the current HDF node. The name only includes the current level. Here is a sample code snippit:
-//   HDF hdf = new HDF();
-//   hdf.setValue("A.B.C","1");
-//   HDF hdf_subnode = hdf.getObj("A.B.C");
-// 
-//   // this will print "C"
-//   System.out.println(hdf_subnode.objName());
-// HDF objNext()
-// This method is used to walk the HDF tree to the next peer.
 
 #define CT_Hdf cHdf
 #define TY_Hdf cHdf->cid
@@ -306,11 +324,13 @@ static kbool_t clearsilver_initPackage(CTX, kKonohaSpace *ks, int argc, const ch
 		_Public, _F(Hdf_dump)		, TY_void	, TY_Hdf, MN_("dump")		, 1, TY_String, FN_("prefix"),
 		_Public, _F(Hdf_getObj)		, TY_Hdf	, TY_Hdf, MN_("getObj")		, 1, TY_String, FN_("name"),
 		_Public, _F(Hdf_objValue)	, TY_String	, TY_Hdf, MN_("objValue")	, 0, 
+		_Public, _F(Hdf_objName)	, TY_String	, TY_Hdf, MN_("objName")	, 0, 
 		_Public, _F(Hdf_getIntValue), TY_Int	, TY_Hdf, MN_("getIntValue"), 2, TY_String, FN_("name"), TY_Int, FN_("defaultValue"),
 		_Public, _F(Hdf_copy)		, TY_void	, TY_Hdf, MN_("copy")		, 2, TY_String, FN_("name"), TY_Hdf, FN_("src"),
 		_Public, _F(Hdf_getNode)	, TY_Hdf	, TY_Hdf, MN_("getNode")	, 1, TY_String, FN_("name"),
 		_Public, _F(Hdf_objChild)   , TY_Hdf 	, TY_Hdf, MN_("objChild")	, 0,
 		_Public, _F(Hdf_objTop)   	, TY_Hdf 	, TY_Hdf, MN_("objTop")	, 0,
+		_Public, _F(Hdf_objNext)   	, TY_Hdf 	, TY_Hdf, MN_("objNext")	, 0,
 		DEND,
 	};
 	kKonohaSpace_loadMethodData(ks, MethodData);
