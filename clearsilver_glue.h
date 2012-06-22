@@ -293,6 +293,19 @@ static KMETHOD Hdf_setCopy(CTX, ksfp_t *sfp _RIX)
 	RETURNvoid_();
 }
 
+//## void removeTree(String name)
+// Remove all nodes of the HDF subtree at name
+static KMETHOD Hdf_removeTree(CTX, ksfp_t *sfp _RIX)
+{
+	HDF *hdf = RawPtr_to(HDF *, sfp[0]);
+	const char *name = S_text(sfp[1].s);
+	NEOERR *err;
+	err = hdf_remove_tree(hdf, name);
+	// TODO: エラー処理
+	RETURNvoid_();
+}
+
+
 
 // void close()
 // Cleans up the underlying HDF JNI non-managed memory. This call is ignored on non-root nodes. Java's GC doesn't understand how much memory is being held by the HDF wrapper, and its destruction can be delayed. In a high-load server, that can lead to a lot of memory waiting around to be re-claimed. Calling this method will free that memory immediately.
@@ -316,25 +329,8 @@ static KMETHOD Hdf_setCopy(CTX, ksfp_t *sfp _RIX)
 // like writeFile, but first writes to a temp file then uses rename(2) to ensure updates are Atomic
 
 
-// void removeTree(String hdfpath)
-// Remove all nodes of the HDF subtree at hdfpath
 // void setSymLink(String hdfpathSrc, hdfpathDest)
 // Links the src hdfpath to the dest
-// void exportDate(String hdfpath, TimeZone timeZone, Date date)
-// Export date to an HDF tree using the specified timeZone. Matches the output of the C CGIKit's export_date* functions. Output is:
-// hdfpath.sec
-// hdfpath.min
-// hdfpath.24hour
-// hdfpath.hour
-// hdfpath.am
-// hdfpath.mday
-// hdfpath.mon
-// hdfpath.year
-// hdfpath.2yr
-// hdfpath.wday
-// hdfpath.tzoffset
-// void exportDate(String hdfpath, String tz, int tt)
-// Same as above exportDate but with a string representation of TimeZone, and a time_t as the Date (seconds since the epoch)
 
 #define CT_Hdf cHdf
 #define TY_Hdf cHdf->cid
@@ -370,8 +366,9 @@ static kbool_t clearsilver_initPackage(CTX, kKonohaSpace *ks, int argc, const ch
 		_Public, _F(Hdf_getNode)	, TY_Hdf	, TY_Hdf, MN_("getNode")	, 1, TY_String, FN_("name"),
 		_Public, _F(Hdf_objChild)   , TY_Hdf 	, TY_Hdf, MN_("objChild")	, 0,
 		_Public, _F(Hdf_getChild)   , TY_Hdf 	, TY_Hdf, MN_("getChild")	, 1, TY_String, FN_("name"),
-		_Public, _F(Hdf_objTop)   	, TY_Hdf 	, TY_Hdf, MN_("objTop")	, 0,
+		_Public, _F(Hdf_objTop)   	, TY_Hdf 	, TY_Hdf, MN_("objTop")		, 0,
 		_Public, _F(Hdf_objNext)   	, TY_Hdf 	, TY_Hdf, MN_("objNext")	, 0,
+		_Public, _F(Hdf_removeTree)	, TY_Hdf	, TY_Hdf, MN_("removeTree")	, 1, TY_String, FN_("name"),
 		DEND,
 	};
 	kKonohaSpace_loadMethodData(ks, MethodData);

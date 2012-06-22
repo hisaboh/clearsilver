@@ -76,4 +76,14 @@ c = c val
 }
 d = c val
 
+ - (Hdf.k:164) a = a val
+a {
+b = b val
+}
+d {
+e {
+f = f val
+}
+}
+
 Q.E.D.

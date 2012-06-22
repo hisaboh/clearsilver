@@ -154,6 +154,17 @@ void test_setCopy() {
 }
 test_setCopy();
 
+void test_removeTree() {
+	Hdf hdf = new Hdf();
+	hdf.setValue("a", "a val");
+	hdf.setValue("a.b", "b val");
+	hdf.setValue("a.b.c", "c val");
+	hdf.setValue("d.e.f", "f val");
+	hdf.removeTree("a.b.c");
+	System.p(hdf.writeString());
+}
+test_removeTree();
+
 void test_objTop() {
 	Hdf hdf = new Hdf();
 	hdf.setValue("a.b.c", "c val");
