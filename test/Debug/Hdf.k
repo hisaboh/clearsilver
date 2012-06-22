@@ -146,6 +146,14 @@ void test_setIntValue() {
 }
 test_setIntValue();
 
+void test_setCopy() {
+	Hdf hdf = new Hdf();
+	hdf.setValue("a.b.c", "c val");
+	hdf.setCopy("d", "a.b.c");
+	System.p(hdf.writeString());
+}
+test_setCopy();
+
 void test_objTop() {
 	Hdf hdf = new Hdf();
 	hdf.setValue("a.b.c", "c val");

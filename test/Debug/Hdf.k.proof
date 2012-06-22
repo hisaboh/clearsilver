@@ -69,4 +69,11 @@ c = c val
  - (Hdf.k:144) key = 1
 
  - (Hdf.k:145) 1
+ - (Hdf.k:153) a {
+b {
+c = c val
+}
+}
+d = c val
+
 Q.E.D.

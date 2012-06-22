@@ -27,17 +27,17 @@ hdf_get_valuevf	// 可変長引数の対応方法が分からないため未対�
 hdf_dump_str	// STRINGの定義が不明
 hdf_read_string_ignore
 hdf_set_buf	// 事前にmallocしたbufをHdf内で利用する関数のため、konohaから利用するには不適
+hdf_get_copy // mallocされたコピーが返ってくる。konohaから見るとhdf_get_valueと分ける必要がない
 hdf_register_fileload // ファイルローダーをどう設定すべきか不明のため
 hdf_get_attr	// HdfAttributeオブジェクトまで作る必要があるか？
 hdf_obj_attr	// HdfAttributeオブジェクトまで作る必要があるか？
 hdf_set_attr	// HdfAttributeオブジェクトまで作る必要があるか？
+hdf_sort_obj	// 複雑かつ用途不明のため
 
 
 /// 未対応 ///////////////////////////////////
 hdf_dump_format
-hdf_sort_obj
 hdf_write_file_atomic
-hdf_get_copy
 hdf_write_file
 hdf_set_copy
 hdf_search_path
