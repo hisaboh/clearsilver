@@ -47,4 +47,11 @@ d {
 }
 }
 
+ - (Hdf.k:97) key = value
+abc {
+cde {
+efg = efg val
+}
+}
+
 Q.E.D.

@@ -90,3 +90,10 @@ void test_getNode() {
 	System.p(hdf.writeString());
 }
 test_getNode();
+
+void test_readString() {
+	Hdf hdf = new Hdf();
+	hdf.readString("key = value\nabc {\ncde {\nefg = efg val\n}\n}");
+	System.p(hdf.writeString());
+}
+test_readString();
