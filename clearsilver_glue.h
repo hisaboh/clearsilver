@@ -281,13 +281,13 @@ static kbool_t clearsilver_initPackage(CTX, kKonohaSpace *ks, int argc, const ch
 		_Public, _F(Hdf_setValue)	, TY_void	, TY_Hdf, MN_("setValue")	, 2, TY_String, FN_("name"), TY_String, FN_("value"),
 		_Public, _F(Hdf_getValue)	, TY_String	, TY_Hdf, MN_("getValue")	, 2, TY_String, FN_("name"), TY_String, FN_("defaultValue"),
 		_Public, _F(Hdf_writeString), TY_String	, TY_Hdf, MN_("writeString"), 0, 
+		_Public, _F(Hdf_readString)	, TY_void	, TY_Hdf, MN_("readString")	, 1, TY_String, FN_("data"),
 		_Public, _F(Hdf_dump)		, TY_void	, TY_Hdf, MN_("dump")		, 1, TY_String, FN_("prefix"),
 		_Public, _F(Hdf_getObj)		, TY_Hdf	, TY_Hdf, MN_("getObj")		, 1, TY_String, FN_("name"),
 		_Public, _F(Hdf_objValue)	, TY_String	, TY_Hdf, MN_("objValue")	, 0, 
 		_Public, _F(Hdf_getIntValue), TY_Int	, TY_Hdf, MN_("getIntValue"), 2, TY_String, FN_("name"), TY_Int, FN_("defaultValue"),
 		_Public, _F(Hdf_copy)		, TY_void	, TY_Hdf, MN_("copy")		, 2, TY_String, FN_("name"), TY_Hdf, FN_("src"),
 		_Public, _F(Hdf_getNode)	, TY_Hdf	, TY_Hdf, MN_("getNode")	, 1, TY_String, FN_("name"),
-		_Public, _F(Hdf_readString)	, TY_void	, TY_Hdf, MN_("readString")	, 1, TY_String, FN_("data"),
 		DEND,
 	};
 	kKonohaSpace_loadMethodData(ks, MethodData);
