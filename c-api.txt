@@ -87,13 +87,13 @@ nerr_handle
 # hdf_copy
 # hdf_get_node
 # hdf_read_string
+# hdf_obj_child
 
 hdf_set_symlink
 hdf_get_valuef
 hdf_dump_str
 hdf_read_string_ignore
 
-hdf_obj_child
 hdf_set_buf
 hdf_register_fileload
 hdf_get_attr

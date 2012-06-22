@@ -54,4 +54,8 @@ efg = efg val
 }
 }
 
+ - (Hdf.k:105) b {
+c = c val
+}
+
 Q.E.D.

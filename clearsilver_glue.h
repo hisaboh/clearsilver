@@ -201,6 +201,19 @@ static KMETHOD Hdf_readString(CTX, ksfp_t *sfp _RIX)
 	RETURNvoid_();
 }
 
+// HDF objChild()
+// This method is used to walk the HDF tree. Keep in mind that every node in the tree can have a value, a child, and a next peer.
+// TODO: 要不要判定
+static KMETHOD Hdf_objChild(CTX, ksfp_t *sfp _RIX)
+{
+	HDF *hdf = RawPtr_to(HDF *, sfp[0]);
+	HDF *retHdf = hdf_obj_child(hdf);
+	kHdf *obj = (kHdf*)new_kObject(O_ct(sfp[K_RTNIDX].o), NULL);
+	obj->hdf = retHdf;
+	RETURN_(obj);
+}
+
+
 // void close()
 // Cleans up the underlying HDF JNI non-managed memory. This call is ignored on non-root nodes. Java's GC doesn't understand how much memory is being held by the HDF wrapper, and its destruction can be delayed. In a high-load server, that can lead to a lot of memory waiting around to be re-claimed. Calling this method will free that memory immediately.
 
@@ -254,8 +267,6 @@ static KMETHOD Hdf_readString(CTX, ksfp_t *sfp _RIX)
 // 
 //   // this will print "C"
 //   System.out.println(hdf_subnode.objName());
-// HDF objChild()
-// This method is used to walk the HDF tree. Keep in mind that every node in the tree can have a value, a child, and a next peer.
 // HDF objNext()
 // This method is used to walk the HDF tree to the next peer.
 
@@ -288,6 +299,7 @@ static kbool_t clearsilver_initPackage(CTX, kKonohaSpace *ks, int argc, const ch
 		_Public, _F(Hdf_getIntValue), TY_Int	, TY_Hdf, MN_("getIntValue"), 2, TY_String, FN_("name"), TY_Int, FN_("defaultValue"),
 		_Public, _F(Hdf_copy)		, TY_void	, TY_Hdf, MN_("copy")		, 2, TY_String, FN_("name"), TY_Hdf, FN_("src"),
 		_Public, _F(Hdf_getNode)	, TY_Hdf	, TY_Hdf, MN_("getNode")	, 1, TY_String, FN_("name"),
+		_Public, _F(Hdf_objChild)   , TY_Hdf 	, TY_Hdf, MN_("objChild")	, 0,
 		DEND,
 	};
 	kKonohaSpace_loadMethodData(ks, MethodData);

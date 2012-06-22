@@ -97,3 +97,11 @@ void test_readString() {
 	System.p(hdf.writeString());
 }
 test_readString();
+
+void test_objChild() {
+	Hdf hdf = new Hdf();
+	hdf.setValue("a.b.c", "c val");
+	hdf.setValue("d.e.f", "f value");
+	System.p(hdf.objChild().writeString());
+}
+test_objChild();
