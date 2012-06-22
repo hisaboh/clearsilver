@@ -201,13 +201,25 @@ static KMETHOD Hdf_readString(CTX, ksfp_t *sfp _RIX)
 	RETURNvoid_();
 }
 
-// HDF objChild()
+//## Hdf Hdf.objChild()
 // This method is used to walk the HDF tree. Keep in mind that every node in the tree can have a value, a child, and a next peer.
 // TODO: 要不要判定
 static KMETHOD Hdf_objChild(CTX, ksfp_t *sfp _RIX)
 {
 	HDF *hdf = RawPtr_to(HDF *, sfp[0]);
 	HDF *retHdf = hdf_obj_child(hdf);
+	kHdf *obj = (kHdf*)new_kObject(O_ct(sfp[K_RTNIDX].o), NULL);
+	obj->hdf = retHdf;
+	RETURN_(obj);
+}
+
+//## Hdf.Hdf.objTop()
+// Return the root of the tree that this node is in.
+// TODO: Java版の名前はgetRootObj()。Java版に合わせて修正すべきかも。
+static KMETHOD Hdf_objTop(CTX, ksfp_t *sfp _RIX)
+{
+	HDF *hdf = RawPtr_to(HDF *, sfp[0]);
+	HDF *retHdf = hdf_obj_top(hdf);
 	kHdf *obj = (kHdf*)new_kObject(O_ct(sfp[K_RTNIDX].o), NULL);
 	obj->hdf = retHdf;
 	RETURN_(obj);
@@ -257,8 +269,6 @@ static KMETHOD Hdf_objChild(CTX, ksfp_t *sfp _RIX)
 // Same as above exportDate but with a string representation of TimeZone, and a time_t as the Date (seconds since the epoch)
 // HDF getChild(String hdfpath)
 // Retrieves the HDF for the first child of the root of the subtree at hdfpath, or null if no child exists of that path or if the path doesn't exist.
-// HDF getRootObj()
-// Return the root of the tree that this node is in.
 // String objName()
 // This method retrieves the name of the current HDF node. The name only includes the current level. Here is a sample code snippit:
 //   HDF hdf = new HDF();
@@ -300,6 +310,7 @@ static kbool_t clearsilver_initPackage(CTX, kKonohaSpace *ks, int argc, const ch
 		_Public, _F(Hdf_copy)		, TY_void	, TY_Hdf, MN_("copy")		, 2, TY_String, FN_("name"), TY_Hdf, FN_("src"),
 		_Public, _F(Hdf_getNode)	, TY_Hdf	, TY_Hdf, MN_("getNode")	, 1, TY_String, FN_("name"),
 		_Public, _F(Hdf_objChild)   , TY_Hdf 	, TY_Hdf, MN_("objChild")	, 0,
+		_Public, _F(Hdf_objTop)   	, TY_Hdf 	, TY_Hdf, MN_("objTop")	, 0,
 		DEND,
 	};
 	kKonohaSpace_loadMethodData(ks, MethodData);

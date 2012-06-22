@@ -88,16 +88,16 @@ nerr_handle
 # hdf_get_node
 # hdf_read_string
 # hdf_obj_child
+# hdf_obj_top
 
 hdf_set_symlink
-hdf_get_valuef
-hdf_dump_str
+hdf_get_valuevf	// 可変長引数の対応方法が分からないため未対応
+hdf_dump_str	// STRINGの定義が不明
 hdf_read_string_ignore
+hdf_set_buf	// 事前にmallocしたbufをHdf内で利用する関数のため、konohaから利用するには不適
+hdf_register_fileload // ファイルローダーをどう設定すべきか不明のため
+hdf_get_attr	// HdfAttributeオブジェクトまで作る必要があるか？
 
-hdf_set_buf
-hdf_register_fileload
-hdf_get_attr
-hdf_obj_top
 hdf_dump_format
 hdf_write_string
 hdf_sort_obj
