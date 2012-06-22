@@ -83,13 +83,14 @@ nerr_handle
 # hdf_destroy
 # hdf_dump
 # hdf_obj_value
-hdf_get_int_value
+# hdf_get_int_value
+# hdf_copy
 
 hdf_set_symlink
 hdf_get_valuef
 hdf_dump_str
+
 hdf_read_string_ignore
-hdf_copy
 hdf_get_node
 hdf_obj_child
 hdf_read_string

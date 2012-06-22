@@ -19,4 +19,9 @@ efg = efg val
  - (Hdf.k:63) 1
  - (Hdf.k:64) 3
  - (Hdf.k:65) 3
+ - (Hdf.k:75) key = value
+src {
+srcKey = value
+}
+
 Q.E.D.

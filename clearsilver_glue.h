@@ -159,6 +159,20 @@ static KMETHOD Hdf_getIntValue(CTX, ksfp_t *sfp _RIX)
 	RETURNi_(hdf_get_int_value(hdf, name, defaultValue));
 }
 
+// ##void Hdf.copy(String name, HDF src)
+// Copy the HDF tree src to the destination path hdfpath in this HDF tree. src may be in this path or not. Result is undefined for overlapping source and destination.
+static KMETHOD Hdf_copy(CTX, ksfp_t *sfp _RIX)
+{
+	HDF *hdf = RawPtr_to(HDF *, sfp[0]);
+	const char *name = S_text(sfp[1].s);
+	HDF *src = RawPtr_to(HDF *, sfp[2]);
+	NEOERR *err;
+	err = hdf_copy(hdf, name, src);
+	// TODO: エラー処理
+
+	RETURNvoid_();
+}
+
 
 // void close()
 // Cleans up the underlying HDF JNI non-managed memory. This call is ignored on non-root nodes. Java's GC doesn't understand how much memory is being held by the HDF wrapper, and its destruction can be delayed. In a high-load server, that can lead to a lot of memory waiting around to be re-claimed. Calling this method will free that memory immediately.
@@ -221,8 +235,6 @@ static KMETHOD Hdf_getIntValue(CTX, ksfp_t *sfp _RIX)
 // This method is used to walk the HDF tree. Keep in mind that every node in the tree can have a value, a child, and a next peer.
 // HDF objNext()
 // This method is used to walk the HDF tree to the next peer.
-// void copy(String hdfpath, HDF src)
-// Copy the HDF tree src to the destination path hdfpath in this HDF tree. src may be in this path or not. Result is undefined for overlapping source and destination.
 
 #define CT_Hdf cHdf
 #define TY_Hdf cHdf->cid
@@ -250,6 +262,7 @@ static kbool_t clearsilver_initPackage(CTX, kKonohaSpace *ks, int argc, const ch
 		_Public, _F(Hdf_getObj)		, TY_Hdf	, TY_Hdf, MN_("getObj")		, 1, TY_String, FN_("name"),
 		_Public, _F(Hdf_objValue)	, TY_String	, TY_Hdf, MN_("objValue")	, 0, 
 		_Public, _F(Hdf_getIntValue), TY_Int	, TY_Hdf, MN_("getIntValue"), 2, TY_String, FN_("name"), TY_Int, FN_("defaultValue"),
+		_Public, _F(Hdf_copy)		, TY_void	, TY_Hdf, MN_("copy"), 2, TY_String, FN_("name"), TY_Hdf, FN_("src"),
 		DEND,
 	};
 	kKonohaSpace_loadMethodData(ks, MethodData);

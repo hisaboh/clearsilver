@@ -66,3 +66,12 @@ void test_getIntValue() {
 }
 test_getIntValue();
 
+void test_copy() {
+	Hdf hdf = new Hdf();
+	hdf.setValue("key", "value");
+	Hdf src = new Hdf();
+	src.setValue("srcKey", "value");
+	hdf.copy("src", src);
+	System.p(hdf.writeString());
+}
+test_copy();
