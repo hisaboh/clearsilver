@@ -203,11 +203,22 @@ static KMETHOD Hdf_readString(CTX, ksfp_t *sfp _RIX)
 
 //## Hdf Hdf.objChild()
 // This method is used to walk the HDF tree. Keep in mind that every node in the tree can have a value, a child, and a next peer.
-// TODO: 要不要判定
 static KMETHOD Hdf_objChild(CTX, ksfp_t *sfp _RIX)
 {
 	HDF *hdf = RawPtr_to(HDF *, sfp[0]);
 	HDF *retHdf = hdf_obj_child(hdf);
+	kHdf *obj = (kHdf*)new_kObject(O_ct(sfp[K_RTNIDX].o), NULL);
+	obj->hdf = retHdf;
+	RETURN_(obj);
+}
+
+//## Hdf Hdf.getChild(String name)
+// Retrieves the HDF for the first child of the root of the subtree at hdfpath, or null if no child exists of that path or if the path doesn't exist.
+static KMETHOD Hdf_getChild(CTX, ksfp_t *sfp _RIX)
+{
+	HDF *hdf = RawPtr_to(HDF *, sfp[0]);
+	const char *name = S_text(sfp[1].s);
+	HDF *retHdf = hdf_get_child(hdf, name);
 	kHdf *obj = (kHdf*)new_kObject(O_ct(sfp[K_RTNIDX].o), NULL);
 	obj->hdf = retHdf;
 	RETURN_(obj);
@@ -295,8 +306,6 @@ static KMETHOD Hdf_objName(CTX, ksfp_t *sfp _RIX)
 // hdfpath.tzoffset
 // void exportDate(String hdfpath, String tz, int tt)
 // Same as above exportDate but with a string representation of TimeZone, and a time_t as the Date (seconds since the epoch)
-// HDF getChild(String hdfpath)
-// Retrieves the HDF for the first child of the root of the subtree at hdfpath, or null if no child exists of that path or if the path doesn't exist.
 
 #define CT_Hdf cHdf
 #define TY_Hdf cHdf->cid
@@ -329,6 +338,7 @@ static kbool_t clearsilver_initPackage(CTX, kKonohaSpace *ks, int argc, const ch
 		_Public, _F(Hdf_copy)		, TY_void	, TY_Hdf, MN_("copy")		, 2, TY_String, FN_("name"), TY_Hdf, FN_("src"),
 		_Public, _F(Hdf_getNode)	, TY_Hdf	, TY_Hdf, MN_("getNode")	, 1, TY_String, FN_("name"),
 		_Public, _F(Hdf_objChild)   , TY_Hdf 	, TY_Hdf, MN_("objChild")	, 0,
+		_Public, _F(Hdf_getChild)   , TY_Hdf 	, TY_Hdf, MN_("getChild")	, 1, TY_String, FN_("name"),
 		_Public, _F(Hdf_objTop)   	, TY_Hdf 	, TY_Hdf, MN_("objTop")	, 0,
 		_Public, _F(Hdf_objNext)   	, TY_Hdf 	, TY_Hdf, MN_("objNext")	, 0,
 		DEND,

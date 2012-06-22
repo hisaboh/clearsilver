@@ -130,6 +130,13 @@ void test_objName() {
 }
 test_objName();
 
+void test_getChild() {
+	Hdf hdf = new Hdf();
+	hdf.setValue("a.b.c", "c val");
+	hdf.setValue("d.e.f", "f value");
+	System.p(hdf.getChild("d.e").objName());
+}
+test_getChild();
 
 void test_objTop() {
 	Hdf hdf = new Hdf();
