@@ -138,6 +138,14 @@ void test_getChild() {
 }
 test_getChild();
 
+void test_setIntValue() {
+	Hdf hdf = new Hdf();
+	hdf.setIntValue("key", 1);
+	System.p(hdf.writeString());
+	System.p(hdf.getIntValue("key", 0));
+}
+test_setIntValue();
+
 void test_objTop() {
 	Hdf hdf = new Hdf();
 	hdf.setValue("a.b.c", "c val");

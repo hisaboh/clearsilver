@@ -79,9 +79,26 @@ static KMETHOD Hdf_setValue(CTX, ksfp_t *sfp _RIX)
 	HDF *hdf = RawPtr_to(HDF *, sfp[0]);
 	const char *name = S_text(sfp[1].s);
 	const char *value = S_text(sfp[2].s);
-	hdf_set_value(hdf, name, value);
+
+	NEOERR *err;
+	err = hdf_set_value(hdf, name, value);
+	// TODO: エラー処理
 	RETURNvoid_();
 }
+
+//## void Hdf.setIntValue(String name, Int value);
+static KMETHOD Hdf_setIntValue(CTX, ksfp_t *sfp _RIX)
+{
+	HDF *hdf = RawPtr_to(HDF *, sfp[0]);
+	const char *name = S_text(sfp[1].s);
+	int value = sfp[2].ivalue;
+
+	NEOERR *err;
+	err = hdf_set_int_value(hdf, name, value);
+	// TODO: エラー処理
+	RETURNvoid_();
+}
+
 
 //## String Hdf.getValue(String name, String defaultValue)
 // This method retrieves a string value from the HDF dataset. The hdfpath is a dotted path of the form "A.B.C".
@@ -327,6 +344,7 @@ static kbool_t clearsilver_initPackage(CTX, kKonohaSpace *ks, int argc, const ch
 	intptr_t MethodData[] = {
 		_Public, _F(Hdf_new)     	, TY_Hdf 	, TY_Hdf, MN_("new")		, 0,
 		_Public, _F(Hdf_setValue)	, TY_void	, TY_Hdf, MN_("setValue")	, 2, TY_String, FN_("name"), TY_String, FN_("value"),
+		_Public, _F(Hdf_setIntValue), TY_void	, TY_Hdf, MN_("setIntValue"), 2, TY_String, FN_("name"), TY_Int, FN_("value"),
 		_Public, _F(Hdf_getValue)	, TY_String	, TY_Hdf, MN_("getValue")	, 2, TY_String, FN_("name"), TY_String, FN_("defaultValue"),
 		_Public, _F(Hdf_writeString), TY_String	, TY_Hdf, MN_("writeString"), 0, 
 		_Public, _F(Hdf_readString)	, TY_void	, TY_Hdf, MN_("readString")	, 1, TY_String, FN_("data"),
