@@ -16,4 +16,7 @@ efg = efg val
  - (Hdf.k:53) (null)
  - (Hdf.k:54) (null)
  - (Hdf.k:55) efg val
+ - (Hdf.k:63) 1
+ - (Hdf.k:64) 3
+ - (Hdf.k:65) 3
 Q.E.D.

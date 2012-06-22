@@ -148,6 +148,17 @@ static KMETHOD Hdf_objValue(CTX, ksfp_t *sfp _RIX)
 	RETURN_(new_kString(value, strlen(value), 0));
 }
 
+//## int getIntValue(String hdfpath, int defaultValue)
+// This method retrieves an integer value from the HDF dataset. The hdfpath is a dotted path of the form "A.B.C".
+static KMETHOD Hdf_getIntValue(CTX, ksfp_t *sfp _RIX)
+{
+	HDF *hdf = RawPtr_to(HDF *, sfp[0]);
+	const char *name = S_text(sfp[1].s);
+	int defaultValue = sfp[2].ivalue;
+
+	RETURNi_(hdf_get_int_value(hdf, name, defaultValue));
+}
+
 
 // void close()
 // Cleans up the underlying HDF JNI non-managed memory. This call is ignored on non-root nodes. Java's GC doesn't understand how much memory is being held by the HDF wrapper, and its destruction can be delayed. In a high-load server, that can lead to a lot of memory waiting around to be re-claimed. Calling this method will free that memory immediately.
@@ -173,10 +184,6 @@ static KMETHOD Hdf_objValue(CTX, ksfp_t *sfp _RIX)
 // boolean readString(String data)
 // parses/loads the contents of the given string as HDF into the current HDF object
 
-// int getIntValue(String hdfpath, int defaultValue)
-// This method retrieves an integer value from the HDF dataset. The hdfpath is a dotted path of the form "A.B.C".
-// void setValue(String hdfpath, String newValue)
-// This method adds a string value to the HDF dataset.
 // void removeTree(String hdfpath)
 // Remove all nodes of the HDF subtree at hdfpath
 // void setSymLink(String hdfpathSrc, hdfpathDest)
@@ -242,6 +249,7 @@ static kbool_t clearsilver_initPackage(CTX, kKonohaSpace *ks, int argc, const ch
 		_Public, _F(Hdf_dump)		, TY_void	, TY_Hdf, MN_("dump")		, 1, TY_String, FN_("prefix"),
 		_Public, _F(Hdf_getObj)		, TY_Hdf	, TY_Hdf, MN_("getObj")		, 1, TY_String, FN_("name"),
 		_Public, _F(Hdf_objValue)	, TY_String	, TY_Hdf, MN_("objValue")	, 0, 
+		_Public, _F(Hdf_getIntValue), TY_Int	, TY_Hdf, MN_("getIntValue"), 2, TY_String, FN_("name"), TY_Int, FN_("defaultValue"),
 		DEND,
 	};
 	kKonohaSpace_loadMethodData(ks, MethodData);

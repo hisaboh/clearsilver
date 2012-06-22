@@ -55,3 +55,14 @@ void test_objValue() {
 	System.p(subnode2.objValue());
 }
 test_objValue();
+
+void test_getIntValue() {
+	Hdf hdf = new Hdf();
+	hdf.setValue("key", "1");
+	hdf.setValue("key2", "あいう")
+	System.p(hdf.getIntValue("key", 0));
+	System.p(hdf.getIntValue("non-key", 3));
+	System.p(hdf.getIntValue("key2", 3));
+}
+test_getIntValue();
+
