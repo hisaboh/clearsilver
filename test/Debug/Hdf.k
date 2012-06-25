@@ -37,25 +37,14 @@ boolean test_dump() {
 }
 assert(test_dump());
 
-void test_getObj() {
-	Hdf hdf = new Hdf();
-	hdf.setValue("abc.cde.efg", "efg val");
-	Hdf obj = hdf.getObj("abc");
-	Hdf notExist = hdf.getObj("c.d.e");
-	System.p(obj.writeString());
-	System.p(notExist.writeString());
-	System.p(hdf.writeString());
-}
-test_getObj();
-
 void test_objValue() {
 	Hdf hdf = new Hdf();
 	hdf.setValue("abc.cde", "efg val");
-	Hdf subnode1 = hdf.getObj("abc");
-	Hdf subnode2 = hdf.getObj("abc.cde");
+	// Hdf subnode1 = hdf.getObj("abc");
+	// Hdf subnode2 = hdf.getObj("abc.cde");
 	System.p(hdf.objValue());
-	System.p(subnode1.objValue());
-	System.p(subnode2.objValue());
+	// System.p(subnode1.objValue());
+	// System.p(subnode2.objValue());
 }
 test_objValue();
 
@@ -80,17 +69,6 @@ void test_copy() {
 }
 test_copy();
 
-void test_getNode() {
-	Hdf hdf = new Hdf();
-	hdf.setValue("abc.cde.efg", "efg val");
-	Hdf obj = hdf.getNode("abc");
-	Hdf notExist = hdf.getNode("c.d.e");
-	System.p(obj.writeString());
-	System.p(notExist.writeString());
-	System.p(hdf.writeString());
-}
-test_getNode();
-
 void test_readString() {
 	Hdf hdf = new Hdf();
 	hdf.readString("key = value\nabc {\ncde {\nefg = efg val\n}\n}");
@@ -98,45 +76,15 @@ void test_readString() {
 }
 test_readString();
 
-void test_objChild() {
-	Hdf hdf = new Hdf();
-	hdf.setValue("a.b.c", "c val");
-	hdf.setValue("d.e.f", "f value");
-	System.p(hdf.objChild().writeString());
-}
-test_objChild();
-
-void test_objNext() {
-	Hdf hdf = new Hdf();
-	hdf.setValue("a.b.c", "c val");
-	hdf.setValue("d.e.f", "f value");
-	Hdf a = hdf.getObj("a");
-	Hdf b = hdf.getObj("a.b");
-	System.p(a.objName());
-	System.p(a.objNext().objName());
-	System.p(a.objNext().objNext().objName());
-	System.p(b.objName())
-	System.p(b.objNext().objName())
-}
-test_objNext();
-
 void test_objName() {
 	Hdf hdf = new Hdf();
 	hdf.setValue("a.b.c", "c val");
 	hdf.setValue("d.e.f", "f value");
-	Hdf a = hdf.getObj("a");
+	// Hdf a = hdf.getObj("a");
 	System.p(hdf.objName());
-	System.p(a.objName());
+	// System.p(a.objName());
 }
 test_objName();
-
-void test_getChild() {
-	Hdf hdf = new Hdf();
-	hdf.setValue("a.b.c", "c val");
-	hdf.setValue("d.e.f", "f value");
-	System.p(hdf.getChild("d.e").objName());
-}
-test_getChild();
 
 void test_setIntValue() {
 	Hdf hdf = new Hdf();

@@ -9,74 +9,35 @@ efg = efg val
 }
 }
 
- - (Hdf.k:45) cde {
-efg = efg val
-}
-
- - (Hdf.k:46) 
- - (Hdf.k:47) abc {
-cde {
-efg = efg val
-}
-}
-
- - (Hdf.k:56) (null)
- - (Hdf.k:57) (null)
- - (Hdf.k:58) efg val
- - (Hdf.k:66) 1
- - (Hdf.k:67) 3
- - (Hdf.k:68) 3
- - (Hdf.k:79) key = value
+ - (Hdf.k:45) (null)
+ - (Hdf.k:55) 1
+ - (Hdf.k:56) 3
+ - (Hdf.k:57) 3
+ - (Hdf.k:68) key = value
 srcKey = value
 src {
 srcKey = value
 }
 
- - (Hdf.k:88) cde {
-efg = efg val
-}
-
- - (Hdf.k:89) 
- - (Hdf.k:90) abc {
-cde {
-efg = efg val
-}
-}
-c {
-d {
-}
-}
-
- - (Hdf.k:97) key = value
+ - (Hdf.k:75) key = value
 abc {
 cde {
 efg = efg val
 }
 }
 
- - (Hdf.k:105) b {
-c = c val
-}
+ - (Hdf.k:84) (null)
+ - (Hdf.k:92) key = 1
 
- - (Hdf.k:115) a
- - (Hdf.k:116) d
- - (Hdf.k:117) (null)
- - (Hdf.k:118) b
- - (Hdf.k:119) (null)
- - (Hdf.k:128) (null)
- - (Hdf.k:129) a
- - (Hdf.k:137) f
- - (Hdf.k:144) key = 1
-
- - (Hdf.k:145) 1
- - (Hdf.k:153) a {
+ - (Hdf.k:93) 1
+ - (Hdf.k:101) a {
 b {
 c = c val
 }
 }
 d = c val
 
- - (Hdf.k:164) a = a val
+ - (Hdf.k:112) a = a val
 a {
 b = b val
 }

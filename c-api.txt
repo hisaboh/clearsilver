@@ -2,26 +2,29 @@
 hdf_set_value
 hdf_get_value
 hdf_init
-hdf_get_obj
 hdf_destroy
 hdf_dump
 hdf_obj_value
 hdf_get_int_value
 hdf_copy
-hdf_get_node
 hdf_read_string
-hdf_obj_child
-hdf_get_child
-hdf_obj_top
-hdf_obj_next
 hdf_obj_name
 hdf_write_string
 hdf_set_int_value
 hdf_set_copy
+hdf_remove_tree
+
+
+/// 中断  ////////////////////////////////////
+hdf_get_node
+hdf_get_obj
+hdf_obj_child
+hdf_obj_top
+hdf_obj_next
+hdf_get_child
 
 
 /// 非対応 ////////////////////////////////////
-hdf_set_symlink
 hdf_get_valuevf	// 可変長引数の対応方法が分からないため未対応
 hdf_set_valuef	// 可変長引数の対応方法が分からないため未対応
 hdf_get_valuevf	// 可変長引数の対応方法が分からないため未対応
@@ -34,14 +37,14 @@ hdf_get_attr	// HdfAttributeオブジェクトまで作る必要があるか？
 hdf_obj_attr	// HdfAttributeオブジェクトまで作る必要があるか？
 hdf_set_attr	// HdfAttributeオブジェクトまで作る必要があるか？
 hdf_sort_obj	// 複雑かつ用途不明のため
+hdf_search_path	// 用途不明
 
 
 /// 未対応 ///////////////////////////////////
+hdf_set_symlink
 hdf_dump_format
 hdf_write_file_atomic
 hdf_write_file
-hdf_search_path
-hdf_remove_tree
 
 
 cgi_debug_init
