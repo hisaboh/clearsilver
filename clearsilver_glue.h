@@ -40,6 +40,7 @@ typedef struct kRawPtr {
 	union {
 		void *rawptr;
 		HDF *hdf;
+		CSPARSE *cs;
 	};
 } kRawPtr;
 
@@ -60,6 +61,25 @@ static void kHdf_free(CTX, kObject *o)
 	if(h->hdf != NULL) {
 		hdf_destroy(&h->hdf);
 		h->hdf = NULL;
+	}
+}
+
+typedef kRawPtr kCs;
+
+static void kCs_init(CTX, kObject *o, void *conf) 
+{
+	kCs *c = (KCs *)o;
+	HDF *hdf = (HDF *)conf;
+	cs_init(&c->cs, hdf);
+	cgi_register_strfuncs(c->cs);
+}
+
+static void kCs_free(CTX, kObject *o) 
+{
+	kCs *c = (kCs *)o;
+	if (o->cs != NULL) {
+		cs_destroy(&c->cs);
+		c->cs = NULL;
 	}
 }
 
@@ -362,6 +382,8 @@ static KMETHOD Hdf_readFile(CTX, ksfp_t *sfp _RIX)
 
 #define CT_Hdf cHdf
 #define TY_Hdf cHdf->cid
+#define CT_Hdf cCs
+#define TY_Hdf cCs->cid
 
 static kbool_t clearsilver_initPackage(CTX, kKonohaSpace *ks, int argc, const char **args, kline_t pline)
 {
@@ -373,6 +395,14 @@ static kbool_t clearsilver_initPackage(CTX, kKonohaSpace *ks, int argc, const ch
 		.free = kHdf_free,
 	};
 	kclass_t *cHdf = Konoha_addClassDef(ks->packid, ks->packdom, NULL, &defHdf, pline);
+
+	KDEFINE_CLASS defCs = {
+		STRUCTNAME(Cs),
+		.cflag = kClass_Final,
+		.init = kCs_init,
+		.free = kCs_free,
+	};
+	kclass_t *cCs = Konoha_addClassDef(ks->packid, ks->packdom, NULL, &defCs, pline);
 
 // method definition
 #define _Public   kMethod_Public
