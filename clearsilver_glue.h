@@ -68,7 +68,7 @@ typedef kRawPtr kCs;
 
 static void kCs_init(CTX, kObject *o, void *conf) 
 {
-	kCs *c = (KCs *)o;
+	kCs *c = (kCs *)o;
 	HDF *hdf = (HDF *)conf;
 	cs_init(&c->cs, hdf);
 	cgi_register_strfuncs(c->cs);
@@ -77,7 +77,7 @@ static void kCs_init(CTX, kObject *o, void *conf)
 static void kCs_free(CTX, kObject *o) 
 {
 	kCs *c = (kCs *)o;
-	if (o->cs != NULL) {
+	if (c->cs != NULL) {
 		cs_destroy(&c->cs);
 		c->cs = NULL;
 	}
@@ -362,28 +362,24 @@ static KMETHOD Hdf_readFile(CTX, ksfp_t *sfp _RIX)
 	RETURNvoid_();
 }
 
-
-// void close()
-// Cleans up the underlying HDF JNI non-managed memory. This call is ignored on non-root nodes. Java's GC doesn't understand how much memory is being held by the HDF wrapper, and its destruction can be delayed. In a high-load server, that can lead to a lot of memory waiting around to be re-claimed. Calling this method will free that memory immediately.
-
-// String fileLoad(String filename)
-// A protected method used as a callback from the JNI code to enable file load wrappers to be written in Java.
-
-// CSFileLoader getFileLoader()
-// Returns the current CSFileLoader
-
-// void setFileLoader(CSFileLoader)
-// Sets the file loader for the HDF to use to load files
-
-
-
 // void setSymLink(String hdfpathSrc, hdfpathDest)
 // Links the src hdfpath to the dest
+/* ======================================================================== */
+//## Cs Cs.new();
+static KMETHOD Cs_new(CTX, ksfp_t *sfp _RIX)
+{
+	HDF *hdf = RawPtr_to(HDF *, sfp[1]);
+	RETURN_(new_kObject(O_ct(sfp[K_RTNIDX].o), hdf));
+}
+
+
+
+
 
 #define CT_Hdf cHdf
 #define TY_Hdf cHdf->cid
-#define CT_Hdf cCs
-#define TY_Hdf cCs->cid
+#define CT_Cs cCs
+#define TY_Cs cCs->cid
 
 static kbool_t clearsilver_initPackage(CTX, kKonohaSpace *ks, int argc, const char **args, kline_t pline)
 {
@@ -430,6 +426,7 @@ static kbool_t clearsilver_initPackage(CTX, kKonohaSpace *ks, int argc, const ch
 		_Public, _F(Hdf_writeFile)	, TY_void	, TY_Hdf, MN_("writeFile")	, 1, TY_String, FN_("path"),
 		_Public, _F(Hdf_writeFileAtomic), TY_void, TY_Hdf, MN_("writeFileAtomic")	, 1, TY_String, FN_("path"),
 		_Public, _F(Hdf_readFile)	, TY_void	, TY_Hdf, MN_("readFile")	, 1, TY_String, FN_("path"),
+		_Public, _F(Cs_new)     	, TY_Cs 	, TY_Cs	, MN_("new")		, 1, TY_Hdf, FN_("hdf"),
 		DEND,
 	};
 	kKonohaSpace_loadMethodData(ks, MethodData);
