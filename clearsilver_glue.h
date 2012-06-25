@@ -40,7 +40,6 @@ typedef struct kRawPtr {
 	union {
 		void *rawptr;
 		HDF *hdf;
-		CSPARSE *cs;
 	};
 } kRawPtr;
 
@@ -64,7 +63,10 @@ static void kHdf_free(CTX, kObject *o)
 	}
 }
 
-typedef kRawPtr kCs;
+typedef struct kCs {
+	kObjectHeader h;
+	CSPARSE *cs;
+} kCs;
 
 static void kCs_init(CTX, kObject *o, void *conf) 
 {

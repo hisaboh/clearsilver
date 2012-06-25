@@ -17,6 +17,9 @@ hdf_write_file
 hdf_read_file
 hdf_write_file_atomic
 
+cs_init
+cs_destroy
+
 
 /// 中断  ////////////////////////////////////
 hdf_get_node
@@ -82,11 +85,9 @@ cgiwrap_write
 cgiwrap_getenv
 
 cs_dump
-cs_destroy
 cs_render
 cs_register_esc_strfunc
 cs_register_fileload
-cs_init
 cs_register_strfunc
 cs_parse_string
 cs_parse_file
