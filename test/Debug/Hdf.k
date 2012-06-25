@@ -124,3 +124,15 @@ void test_writeFile() {
 	assert(hdf.writeString() == test.writeString());
 }
 test_writeFile();
+
+void test_writeFileAtomic() {
+	Hdf hdf = new Hdf();
+	hdf.setValue("a.b.c", "val");
+	hdf.writeFileAtomic("Testing/Temporary/testfile_atomic.hdf");
+
+	Hdf test = new Hdf();
+	test.readFile("Testing/Temporary/testfile_atomic.hdf");
+	System.p(test.writeString());
+	assert(hdf.writeString() == test.writeString());
+}
+test_writeFileAtomic();

@@ -13,6 +13,9 @@ hdf_write_string
 hdf_set_int_value
 hdf_set_copy
 hdf_remove_tree
+hdf_write_file
+hdf_read_file
+hdf_write_file_atomic
 
 
 /// 中断  ////////////////////////////////////
@@ -43,8 +46,6 @@ hdf_search_path	// 用途不明
 /// 未対応 ///////////////////////////////////
 hdf_set_symlink
 hdf_dump_format
-hdf_write_file_atomic
-hdf_write_file
 
 
 cgi_debug_init

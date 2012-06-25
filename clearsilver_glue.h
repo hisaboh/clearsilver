@@ -306,7 +306,20 @@ static KMETHOD Hdf_removeTree(CTX, ksfp_t *sfp _RIX)
 	RETURNvoid_();
 }
 
+//## void writeFileAtomic(String path
+// like writeFile, but first writes to a temp file then uses rename(2) to ensure updates are Atomic
+static KMETHOD Hdf_writeFileAtomic(CTX, ksfp_t *sfp _RIX)
+{
+	HDF *hdf = RawPtr_to(HDF *, sfp[0]);
+	const char *path = S_text(sfp[1].s);
+	NEOERR *err;
+	err = hdf_write_file_atomic(hdf, path);
+	// TODO: エラー処理
+	RETURNvoid_();
+}
+
 //## void Hdf.writeFile(String path)
+// writes/serializes HDF dataset to file
 static KMETHOD Hdf_writeFile(CTX, ksfp_t *sfp _RIX)
 {
 	HDF *hdf = RawPtr_to(HDF *, sfp[0]);
@@ -318,6 +331,7 @@ static KMETHOD Hdf_writeFile(CTX, ksfp_t *sfp _RIX)
 }
 
 //## void Hdf.readFile(String path)
+// This method reads the contends of an on-disk HDF dataset into the current HDF object.
 static KMETHOD Hdf_readFile(CTX, ksfp_t *sfp _RIX)
 {
 	HDF *hdf = RawPtr_to(HDF *, sfp[0]);
@@ -332,9 +346,6 @@ static KMETHOD Hdf_readFile(CTX, ksfp_t *sfp _RIX)
 // void close()
 // Cleans up the underlying HDF JNI non-managed memory. This call is ignored on non-root nodes. Java's GC doesn't understand how much memory is being held by the HDF wrapper, and its destruction can be delayed. In a high-load server, that can lead to a lot of memory waiting around to be re-claimed. Calling this method will free that memory immediately.
 
-// void readFile(String filename)
-// This method reads the contends of an on-disk HDF dataset into the current HDF object.
-
 // String fileLoad(String filename)
 // A protected method used as a callback from the JNI code to enable file load wrappers to be written in Java.
 
@@ -344,11 +355,6 @@ static KMETHOD Hdf_readFile(CTX, ksfp_t *sfp _RIX)
 // void setFileLoader(CSFileLoader)
 // Sets the file loader for the HDF to use to load files
 
-// boolean writeFile(String filename)
-// writes/serializes HDF dataset to file
-
-// boolean writeFileAtomic(String filename)
-// like writeFile, but first writes to a temp file then uses rename(2) to ensure updates are Atomic
 
 
 // void setSymLink(String hdfpathSrc, hdfpathDest)
@@ -392,6 +398,7 @@ static kbool_t clearsilver_initPackage(CTX, kKonohaSpace *ks, int argc, const ch
 		// _Public, _F(Hdf_objNext)   	, TY_Hdf 	, TY_Hdf, MN_("objNext")	, 0,
 		_Public, _F(Hdf_removeTree)	, TY_void	, TY_Hdf, MN_("removeTree")	, 1, TY_String, FN_("name"),
 		_Public, _F(Hdf_writeFile)	, TY_void	, TY_Hdf, MN_("writeFile")	, 1, TY_String, FN_("path"),
+		_Public, _F(Hdf_writeFileAtomic), TY_void, TY_Hdf, MN_("writeFileAtomic")	, 1, TY_String, FN_("path"),
 		_Public, _F(Hdf_readFile)	, TY_void	, TY_Hdf, MN_("readFile")	, 1, TY_String, FN_("path"),
 		DEND,
 	};
