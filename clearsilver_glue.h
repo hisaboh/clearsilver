@@ -306,6 +306,27 @@ static KMETHOD Hdf_removeTree(CTX, ksfp_t *sfp _RIX)
 	RETURNvoid_();
 }
 
+//## void Hdf.writeFile(String path)
+static KMETHOD Hdf_writeFile(CTX, ksfp_t *sfp _RIX)
+{
+	HDF *hdf = RawPtr_to(HDF *, sfp[0]);
+	const char *path = S_text(sfp[1].s);
+	NEOERR *err;
+	err = hdf_write_file(hdf, path);
+	// TODO: エラー処理
+	RETURNvoid_();
+}
+
+//## void Hdf.readFile(String path)
+static KMETHOD Hdf_readFile(CTX, ksfp_t *sfp _RIX)
+{
+	HDF *hdf = RawPtr_to(HDF *, sfp[0]);
+	const char *path = S_text(sfp[1].s);
+	NEOERR *err;
+	err = hdf_read_file(hdf, path);
+	// TODO: エラー処理
+	RETURNvoid_();
+}
 
 
 // void close()
@@ -370,6 +391,8 @@ static kbool_t clearsilver_initPackage(CTX, kKonohaSpace *ks, int argc, const ch
 		// _Public, _F(Hdf_objTop)   	, TY_Hdf 	, TY_Hdf, MN_("objTop")		, 0,
 		// _Public, _F(Hdf_objNext)   	, TY_Hdf 	, TY_Hdf, MN_("objNext")	, 0,
 		_Public, _F(Hdf_removeTree)	, TY_void	, TY_Hdf, MN_("removeTree")	, 1, TY_String, FN_("name"),
+		_Public, _F(Hdf_writeFile)	, TY_void	, TY_Hdf, MN_("writeFile")	, 1, TY_String, FN_("path"),
+		_Public, _F(Hdf_readFile)	, TY_void	, TY_Hdf, MN_("readFile")	, 1, TY_String, FN_("path"),
 		DEND,
 	};
 	kKonohaSpace_loadMethodData(ks, MethodData);

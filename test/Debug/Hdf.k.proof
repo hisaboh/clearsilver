@@ -47,4 +47,10 @@ f = f val
 }
 }
 
+ - (Hdf.k:123) a {
+b {
+c = val
+}
+}
+
 Q.E.D.

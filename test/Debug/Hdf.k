@@ -113,13 +113,14 @@ void test_removeTree() {
 }
 test_removeTree();
 
-void test_objTop() {
+void test_writeFile() {
 	Hdf hdf = new Hdf();
-	hdf.setValue("a.b.c", "c val");
-	Hdf child = hdf.getObj("a.b");
-	System.p(child.writeString());
-	Hdf top = child.objTop();
-	System.p(child.objTop().writeString());
+	hdf.setValue("a.b.c", "val");
+	hdf.writeFile("Testing/Temporary/testfile.hdf");
+
+	Hdf test = new Hdf();
+	test.readFile("Testing/Temporary/testfile.hdf");
+	System.p(test.writeString());
+	assert(hdf.writeString() == test.writeString());
 }
-// TODO: このエラーの修正 → konoha(6729) malloc: *** error for object 0x109e147d0: pointer being freed was not allocated
-// test_objTop();
+test_writeFile();
