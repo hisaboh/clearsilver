@@ -434,8 +434,19 @@ static KMETHOD Hdf_readFile(CTX, ksfp_t *sfp _RIX)
 	RETURNvoid_();
 }
 
-// void setSymLink(String hdfpathSrc, hdfpathDest)
+//## void Hdf.setSymLink(String name, destName)
 // Links the src hdfpath to the dest
+static KMETHOD Hdf_setSymLink(CTX, ksfp_t *sfp _RIX)
+{
+	HDF *hdf = S_HDF(sfp[0]);
+	const char *name = S_text(sfp[1].s);
+	const char *destName = S_text(sfp[2].s);
+	NEOERR *err;
+	err = hdf_set_symlink(hdf, name, destName);
+	// TODO: エラー処理
+	RETURNvoid_();
+}
+
 /* ======================================================================== */
 //## Cs Cs.new();
 static KMETHOD Cs_new(CTX, ksfp_t *sfp _RIX)
@@ -498,6 +509,7 @@ static kbool_t clearsilver_initPackage(CTX, kKonohaSpace *ks, int argc, const ch
 		_Public, _F(Hdf_writeFile)	, TY_void	, TY_Hdf, MN_("writeFile")	, 1, TY_String, FN_("path"),
 		_Public, _F(Hdf_writeFileAtomic), TY_void, TY_Hdf, MN_("writeFileAtomic")	, 1, TY_String, FN_("path"),
 		_Public, _F(Hdf_readFile)	, TY_void	, TY_Hdf, MN_("readFile")	, 1, TY_String, FN_("path"),
+		_Public, _F(Hdf_setSymLink)	, TY_void	, TY_Hdf, MN_("setSymLink")	, 2, TY_String, FN_("name"), TY_String, FN_("destName"),
 		_Public, _F(Cs_new)     	, TY_Cs 	, TY_Cs	, MN_("new")		, 1, TY_Hdf, FN_("hdf"),
 		DEND,
 	};

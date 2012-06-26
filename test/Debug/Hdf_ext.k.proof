@@ -42,4 +42,27 @@ c = c val
 }
 }
 
+ - (Hdf_ext.k:78) a {
+b {
+c = c val
+}
+}
+d {
+e {
+f = f val
+}
+}
+
+ - (Hdf_ext.k:80) a {
+b {
+c : d.e
+}
+}
+d {
+e {
+f = f val
+}
+}
+
+ - (Hdf_ext.k:81) e
 Q.E.D.

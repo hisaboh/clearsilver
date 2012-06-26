@@ -69,5 +69,15 @@ void test_objTop() {
 	System.p(top.writeString());
 	assert(top.writeString() == hdf.writeString());
 }
-// TODO: このエラーの修正 → konoha(6729) malloc: *** error for object 0x109e147d0: pointer being freed was not allocated
 test_objTop();
+
+void test_setSymLink() {
+	Hdf hdf = new Hdf();
+	hdf.setValue("a.b.c", "c val");
+	hdf.setValue("d.e.f", "f val");
+	System.p(hdf.writeString());
+	hdf.setSymLink("a.b.c", "d.e");
+	System.p(hdf.writeString());
+	System.p(hdf.getObj("a.b.c").objName());
+}
+test_setSymLink();

@@ -16,18 +16,19 @@ hdf_remove_tree
 hdf_write_file
 hdf_read_file
 hdf_write_file_atomic
-
-cs_init
-cs_destroy
-
-
-/// 中断  ////////////////////////////////////
 hdf_get_node
 hdf_get_obj
 hdf_obj_child
 hdf_obj_top
 hdf_obj_next
 hdf_get_child
+hdf_set_symlink
+
+cs_init
+cs_destroy
+
+
+/// 中断  ////////////////////////////////////
 
 
 /// 非対応 ////////////////////////////////////
@@ -47,7 +48,6 @@ hdf_search_path	// 用途不明
 
 
 /// 未対応 ///////////////////////////////////
-hdf_set_symlink
 hdf_dump_format
 
 
