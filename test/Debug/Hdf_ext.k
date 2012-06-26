@@ -30,13 +30,13 @@ void test_getNode() {
 }
 test_getNode();
 
-// void test_objChild() {
-// 	Hdf hdf = new Hdf();
-// 	hdf.setValue("a.b.c", "c val");
-// 	hdf.setValue("d.e.f", "f value");
-// 	System.p(hdf.objChild().writeString());
-// }
-// test_objChild();
+void test_objChild() {
+	Hdf hdf = new Hdf();
+	hdf.setValue("a.b.c", "c val");
+	hdf.setValue("d.e.f", "f value");
+	System.p(hdf.objChild().writeString());
+}
+test_objChild();
 
 // void test_objNext() {
 // 	Hdf hdf = new Hdf();
