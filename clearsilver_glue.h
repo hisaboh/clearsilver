@@ -35,18 +35,18 @@ extern "C" {
 
 /* ======================================================================== */
 
-typedef struct kRawPtr {
+typedef struct hdf_t
+{
+	HDF *hdf;
+	int refer_cnt;
+} hdf_t;
+
+typedef struct kHdf {
 	kObjectHeader h;
-	union {
-		void *rawptr;
-		HDF *hdf;
-	};
-} kRawPtr;
+	HDF *hdf;
+} kHdf;
 
-typedef kRawPtr kHdf;
-
-#define RawPtr_to(T, a)    ((T)((kRawPtr *)a.o)->rawptr)
-#define HDF_to(a)          ((kRawPtr *)a.o)->hdf
+#define HDF_to(a)          ((kHdf *)a.o)->hdf
 
 static void kHdf_init(CTX, kObject *o, void *conf)
 {
@@ -206,7 +206,7 @@ static KMETHOD Hdf_copy(CTX, ksfp_t *sfp _RIX)
 {
 	HDF *hdf = HDF_to(sfp[0]);
 	const char *name = S_text(sfp[1].s);
-	HDF *src = RawPtr_to(HDF *, sfp[2]);
+	HDF *src = HDF_to(sfp[2]);
 	NEOERR *err;
 	err = hdf_copy(hdf, name, src);
 	// TODO: エラー処理
