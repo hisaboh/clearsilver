@@ -9,4 +9,19 @@ efg = efg val
 }
 }
 
+ - (Hdf_ext.k:27) cde {
+efg = efg val
+}
+
+ - (Hdf_ext.k:28) 
+ - (Hdf_ext.k:29) abc {
+cde {
+efg = efg val
+}
+}
+c {
+d {
+}
+}
+
 Q.E.D.

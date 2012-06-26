@@ -19,16 +19,16 @@ void test_getObj() {
 }
 test_getObj();
 
-// void test_getNode() {
-// 	Hdf hdf = new Hdf();
-// 	hdf.setValue("abc.cde.efg", "efg val");
-// 	Hdf obj = hdf.getNode("abc");
-// 	Hdf notExist = hdf.getNode("c.d.e");
-// 	System.p(obj.writeString());
-// 	System.p(notExist.writeString());
-// 	System.p(hdf.writeString());
-// }
-// test_getNode();
+void test_getNode() {
+	Hdf hdf = new Hdf();
+	hdf.setValue("abc.cde.efg", "efg val");
+	Hdf obj = hdf.getNode("abc");
+	Hdf notExist = hdf.getNode("c.d.e");
+	System.p(obj.writeString());
+	System.p(notExist.writeString());
+	System.p(hdf.writeString());
+}
+test_getNode();
 
 // void test_objChild() {
 // 	Hdf hdf = new Hdf();

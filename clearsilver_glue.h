@@ -56,7 +56,6 @@ typedef struct kHdf {
 
 #define S_kHdf(a)         ((kHdf *)a.o)
 #define S_HDF(a)          ((((kHdf *)a.o)->hdf_obj)->hdf)
-#define ROOT_OBJ_to(a)     (((kHdf *)a.o)->root_hdf_obj)
 
 static int malloc_cnt = 0;
 static int free_cnt = 0;
