@@ -60,13 +60,14 @@ void test_getChild() {
 }
 test_getChild();
 
-// void test_objTop() {
-// 	Hdf hdf = new Hdf();
-// 	hdf.setValue("a.b.c", "c val");
-// 	Hdf child = hdf.getObj("a.b");
-// 	System.p(child.writeString());
-// 	Hdf top = child.objTop();
-// 	System.p(child.objTop().writeString());
-// }
+void test_objTop() {
+	Hdf hdf = new Hdf();
+	hdf.setValue("a.b.c", "c val");
+	Hdf child = hdf.getObj("a.b");
+	System.p(child.writeString());
+	Hdf top = child.objTop();
+	System.p(top.writeString());
+	assert(top.writeString() == hdf.writeString());
+}
 // TODO: このエラーの修正 → konoha(6729) malloc: *** error for object 0x109e147d0: pointer being freed was not allocated
-// test_objTop();
+test_objTop();

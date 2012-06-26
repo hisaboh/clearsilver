@@ -29,4 +29,12 @@ c = c val
 }
 
  - (Hdf_ext.k:59) f
+ - (Hdf_ext.k:67) c = c val
+
+ - (Hdf_ext.k:69) a {
+b {
+c = c val
+}
+}
+
 Q.E.D.
