@@ -165,6 +165,19 @@ static void kCs_free(CTX, kObject *o)
 	}
 }
 
+typedef struct kCgi
+{
+	kObjectHeader h;
+} kCgi;
+
+static void kCgi_init(CTX, kObject *o, void *conf) 
+{
+}
+
+static void kCgi_free(CTX, kObject *o) 
+{
+}
+
 /* ======================================================================== */
 /* [API bindings] */
 
@@ -465,6 +478,8 @@ static KMETHOD Cs_new(CTX, ksfp_t *sfp _RIX)
 #define TY_Hdf cHdf->cid
 #define CT_Cs cCs
 #define TY_Cs cCs->cid
+#define CT_Cgi cCgi
+#define TY_Cgi cCgi->cid
 
 static kbool_t clearsilver_initPackage(CTX, kKonohaSpace *ks, int argc, const char **args, kline_t pline)
 {
@@ -484,6 +499,14 @@ static kbool_t clearsilver_initPackage(CTX, kKonohaSpace *ks, int argc, const ch
 		.free = kCs_free,
 	};
 	kclass_t *cCs = Konoha_addClassDef(ks->packid, ks->packdom, NULL, &defCs, pline);
+
+	KDEFINE_CLASS defCgi = {
+		STRUCTNAME(Cgi),
+		.cflag = kClass_Final,
+		.init = kCgi_init,
+		.free = kCgi_free,
+	};
+	kclass_t *cCgi = Konoha_addClassDef(ks->packid, ks->packdom, NULL, &defCgi, pline);
 
 // method definition
 #define _Public   kMethod_Public
