@@ -223,7 +223,9 @@ static KMETHOD Hdf_writeString(CTX, ksfp_t *sfp _RIX)
 	NEOERR* err;
 	err = hdf_write_string(hdf, &ret);
 	// TODO: エラー処理
-	RETURN_(new_kString(ret, strlen(ret), 0));
+	kString *string = new_kString(ret, strlen(ret), 0);
+	free(ret);
+	RETURN_(string);
 }
 
 //## String Hdf.dump()

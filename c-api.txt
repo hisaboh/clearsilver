@@ -45,10 +45,10 @@ hdf_obj_attr	// HdfAttributeオブジェクトまで作る必要があるか？
 hdf_set_attr	// HdfAttributeオブジェクトまで作る必要があるか？
 hdf_sort_obj	// 複雑かつ用途不明のため
 hdf_search_path	// 用途不明
+hdf_dump_format	// FILE fpの対応方法不明
 
 
 /// 未対応 ///////////////////////////////////
-hdf_dump_format
 
 
 cgi_debug_init
