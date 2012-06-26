@@ -27,6 +27,8 @@ hdf_set_symlink
 cs_init
 cs_destroy
 
+cgi_url_escape
+html_escape_strfunc
 
 /// 中断  ////////////////////////////////////
 
@@ -63,7 +65,6 @@ cgi_neo_error
 cgi_redirect
 cgi_filehandle
 cgi_register_parse_cb
-cgi_url_escape
 cgi_init
 cgi_redirect_uri
 cgi_cookie_clear

@@ -143,6 +143,8 @@ static void kHdf_free(CTX, kObject *o)
 }
 
 
+#define S_CSPARSE(a)          (((kCs *)a.o)->cs)
+
 typedef struct kCs {
 	kObjectHeader h;
 	CSPARSE *cs;
@@ -470,6 +472,17 @@ static KMETHOD Cs_new(CTX, ksfp_t *sfp _RIX)
 	RETURN_(new_kObject(O_ct(sfp[K_RTNIDX].o), hdf));
 }
 
+//## void Cs.parseString(String template)
+static KMETHOD Cs_parseString(CTX, ksfp_t *sfp _RIX)
+{
+	CSPARSE *cs = S_CSPARSE(sfp[0]);
+	char *t = strdup(S_text(sfp[1].s));
+	size_t len = S_size(sfp[1].s);
+	cs_parse_string(cs, t, len);
+	RETURNvoid_();
+}
+
+
 /* ======================================================================== */
 //## @Static String Cgi.urlEscape(String url);
 static KMETHOD Cgi_urlEscape(CTX, ksfp_t *sfp _RIX)
@@ -558,6 +571,7 @@ static kbool_t clearsilver_initPackage(CTX, kKonohaSpace *ks, int argc, const ch
 		_Public, _F(Hdf_readFile)	, TY_void	, TY_Hdf, MN_("readFile")	, 1, TY_String, FN_("path"),
 		_Public, _F(Hdf_setSymLink)	, TY_void	, TY_Hdf, MN_("setSymLink")	, 2, TY_String, FN_("name"), TY_String, FN_("destName"),
 		_Public, _F(Cs_new)     	, TY_Cs 	, TY_Cs	, MN_("new")		, 1, TY_Hdf, FN_("hdf"),
+		_Public, _F(Cs_parseString) , TY_void 	, TY_Cs	, MN_("parseString"), 1, TY_String, FN_("template"),
 		_Public|_Static, _F(Cgi_urlEscape), TY_String, TY_Cgi, MN_("urlEscape")		, 1, TY_String, FN_("url"),
 		_Public|_Static, _F(Cgi_htmlEscape), TY_String, TY_Cgi, MN_("htmlEscape")		, 1, TY_String, FN_("html"),
 		DEND,

@@ -7,3 +7,11 @@ boolean test_new() {
 	return true;
 }
 assert(test_new());
+
+boolean test_parseString() {
+	Hdf hdf = new Hdf();
+	Cs cs = new Cs(hdf);
+	cs.parseString("hogehoge");
+	return true;
+}
+assert(test_parseString());
