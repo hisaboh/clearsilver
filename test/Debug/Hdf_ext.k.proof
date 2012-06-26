@@ -1,1 +1,12 @@
- - (Hdf.k:16) val
+ - (Hdf_ext.k:16) cde {
+efg = efg val
+}
+
+ - (Hdf_ext.k:17) 
+ - (Hdf_ext.k:18) abc {
+cde {
+efg = efg val
+}
+}
+
+Q.E.D.

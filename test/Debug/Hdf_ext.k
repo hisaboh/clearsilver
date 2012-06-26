@@ -12,10 +12,10 @@ void test_getObj() {
 	Hdf hdf = new Hdf();
 	hdf.setValue("abc.cde.efg", "efg val");
 	Hdf obj = hdf.getObj("abc");
-	// Hdf notExist = hdf.getObj("c.d.e");
-	// System.p(obj.writeString());
-	// System.p(notExist.writeString());
-	// System.p(hdf.writeString());
+	Hdf notExist = hdf.getObj("c.d.e");
+	System.p(obj.writeString());
+	System.p(notExist.writeString());
+	System.p(hdf.writeString());
 }
 test_getObj();
 
