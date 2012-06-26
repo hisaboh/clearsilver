@@ -330,15 +330,13 @@ static KMETHOD Hdf_objChild(CTX, ksfp_t *sfp _RIX)
 
 //## Hdf Hdf.getChild(String name)
 // Retrieves the HDF for the first child of the root of the subtree at hdfpath, or null if no child exists of that path or if the path doesn't exist.
-// static KMETHOD Hdf_getChild(CTX, ksfp_t *sfp _RIX)
-// {
-// 	HDF *hdf = S_HDF(sfp[0]);
-// 	const char *name = S_text(sfp[1].s);
-// 	HDF *retHdf = hdf_get_child(hdf, name);
-// 	kHdf *obj = (kHdf*)new_kObject(O_ct(sfp[K_RTNIDX].o), NULL);
-// 	obj->hdf = retHdf;
-// 	RETURN_(obj);
-// }
+static KMETHOD Hdf_getChild(CTX, ksfp_t *sfp _RIX)
+{
+	HDF *hdf = S_HDF(sfp[0]);
+	const char *name = S_text(sfp[1].s);
+	HDF *retHdf = hdf_get_child(hdf, name);
+	RETURN_(new_kHdf(O_ct(sfp[K_RTNIDX].o), retHdf, S_kHdf(sfp[0])));
+}
 
 //## Hdf Hdf.objTop()
 // Return the root of the tree that this node is in.
@@ -497,7 +495,7 @@ static kbool_t clearsilver_initPackage(CTX, kKonohaSpace *ks, int argc, const ch
 		_Public, _F(Hdf_setCopy)	, TY_void	, TY_Hdf, MN_("setCopy")	, 2, TY_String, FN_("name"), TY_String, FN_("srcName"),
 		_Public, _F(Hdf_getNode)	, TY_Hdf	, TY_Hdf, MN_("getNode")	, 1, TY_String, FN_("name"),
 		_Public, _F(Hdf_objChild)   , TY_Hdf 	, TY_Hdf, MN_("objChild")	, 0,
-		// _Public, _F(Hdf_getChild)   , TY_Hdf 	, TY_Hdf, MN_("getChild")	, 1, TY_String, FN_("name"),
+		_Public, _F(Hdf_getChild)   , TY_Hdf 	, TY_Hdf, MN_("getChild")	, 1, TY_String, FN_("name"),
 		// _Public, _F(Hdf_objTop)   	, TY_Hdf 	, TY_Hdf, MN_("objTop")		, 0,
 		// _Public, _F(Hdf_objNext)   	, TY_Hdf 	, TY_Hdf, MN_("objNext")	, 0,
 		_Public, _F(Hdf_removeTree)	, TY_void	, TY_Hdf, MN_("removeTree")	, 1, TY_String, FN_("name"),
