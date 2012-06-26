@@ -46,6 +46,7 @@ typedef struct kRawPtr {
 typedef kRawPtr kHdf;
 
 #define RawPtr_to(T, a)    ((T)((kRawPtr *)a.o)->rawptr)
+#define HDF_to(a)          ((kRawPtr *)a.o)->hdf
 
 static void kHdf_init(CTX, kObject *o, void *conf)
 {
@@ -98,7 +99,7 @@ static KMETHOD Hdf_new(CTX, ksfp_t *sfp _RIX)
 //## void Hdf.setValue(String name, String value);
 static KMETHOD Hdf_setValue(CTX, ksfp_t *sfp _RIX)
 {
-	HDF *hdf = RawPtr_to(HDF *, sfp[0]);
+	HDF *hdf = HDF_to(sfp[0]);
 	const char *name = S_text(sfp[1].s);
 	const char *value = S_text(sfp[2].s);
 
@@ -111,7 +112,7 @@ static KMETHOD Hdf_setValue(CTX, ksfp_t *sfp _RIX)
 //## void Hdf.setIntValue(String name, Int value);
 static KMETHOD Hdf_setIntValue(CTX, ksfp_t *sfp _RIX)
 {
-	HDF *hdf = RawPtr_to(HDF *, sfp[0]);
+	HDF *hdf = HDF_to(sfp[0]);
 	const char *name = S_text(sfp[1].s);
 	int value = sfp[2].ivalue;
 
@@ -126,7 +127,7 @@ static KMETHOD Hdf_setIntValue(CTX, ksfp_t *sfp _RIX)
 // This method retrieves a string value from the HDF dataset. The hdfpath is a dotted path of the form "A.B.C".
 static KMETHOD Hdf_getValue(CTX, ksfp_t *sfp _RIX)
 {
-	HDF *hdf = RawPtr_to(HDF *, sfp[0]);
+	HDF *hdf = HDF_to(sfp[0]);
 	const char *name = S_text(sfp[1].s);
 	const char *defaultValue = S_text(sfp[2].s);
 	const char *value = hdf_get_value(hdf, name, defaultValue);
@@ -138,7 +139,7 @@ static KMETHOD Hdf_getValue(CTX, ksfp_t *sfp _RIX)
 // serializes HDF contents to a string
 static KMETHOD Hdf_writeString(CTX, ksfp_t *sfp _RIX)
 {
-	HDF *hdf = RawPtr_to(HDF *, sfp[0]);
+	HDF *hdf = HDF_to(sfp[0]);
 	char *ret = NULL;
 	NEOERR* err;
 	err = hdf_write_string(hdf, &ret);
@@ -151,7 +152,7 @@ static KMETHOD Hdf_writeString(CTX, ksfp_t *sfp _RIX)
 // TODO: stdoutに直接dumpするため、konohaから使うに相応わしくないかも。
 static KMETHOD Hdf_dump(CTX, ksfp_t *sfp _RIX)
 {
-	HDF *hdf = RawPtr_to(HDF *, sfp[0]);
+	HDF *hdf = HDF_to(sfp[0]);
 	const char *prefix = S_text(sfp[1].s);
 	NEOERR* err;
 	err = hdf_dump(hdf, prefix);
@@ -163,7 +164,7 @@ static KMETHOD Hdf_dump(CTX, ksfp_t *sfp _RIX)
 // This method allows you to retrieve the HDF object which represents the HDF subtree ad the named hdfpath.
 // static KMETHOD Hdf_getObj(CTX, ksfp_t *sfp _RIX)
 // {
-// 	HDF *hdf = RawPtr_to(HDF *, sfp[0]);
+// 	HDF *hdf = HDF_to(sfp[0]);
 // 	const char *name = S_text(sfp[1].s);
 // 	HDF *retHdf = hdf_get_obj(hdf, name);
 // 	kHdf *obj = (kHdf*)new_kObject(O_ct(sfp[K_RTNIDX].o), NULL);
@@ -181,7 +182,7 @@ static KMETHOD Hdf_dump(CTX, ksfp_t *sfp _RIX)
 //   System.p(hdf_subnode.objValue());
 static KMETHOD Hdf_objValue(CTX, ksfp_t *sfp _RIX)
 {
-	HDF *hdf = RawPtr_to(HDF *, sfp[0]);
+	HDF *hdf = HDF_to(sfp[0]);
 	char *value = hdf_obj_value(hdf);
 
 	if (value == NULL) RETURN_(K_NULL);
@@ -192,7 +193,7 @@ static KMETHOD Hdf_objValue(CTX, ksfp_t *sfp _RIX)
 // This method retrieves an integer value from the HDF dataset. The hdfpath is a dotted path of the form "A.B.C".
 static KMETHOD Hdf_getIntValue(CTX, ksfp_t *sfp _RIX)
 {
-	HDF *hdf = RawPtr_to(HDF *, sfp[0]);
+	HDF *hdf = HDF_to(sfp[0]);
 	const char *name = S_text(sfp[1].s);
 	int defaultValue = sfp[2].ivalue;
 
@@ -203,7 +204,7 @@ static KMETHOD Hdf_getIntValue(CTX, ksfp_t *sfp _RIX)
 // Copy the HDF tree src to the destination path hdfpath in this HDF tree. src may be in this path or not. Result is undefined for overlapping source and destination.
 static KMETHOD Hdf_copy(CTX, ksfp_t *sfp _RIX)
 {
-	HDF *hdf = RawPtr_to(HDF *, sfp[0]);
+	HDF *hdf = HDF_to(sfp[0]);
 	const char *name = S_text(sfp[1].s);
 	HDF *src = RawPtr_to(HDF *, sfp[2]);
 	NEOERR *err;
@@ -218,7 +219,7 @@ static KMETHOD Hdf_copy(CTX, ksfp_t *sfp _RIX)
 // TODO: Java版名称はgetOrCreateObj。Java版に合わせて修正すべきかも。
 // static KMETHOD Hdf_getNode(CTX, ksfp_t *sfp _RIX)
 // {
-// 	HDF *hdf = RawPtr_to(HDF *, sfp[0]);
+// 	HDF *hdf = HDF_to(sfp[0]);
 // 	const char *name = S_text(sfp[1].s);
 // 	HDF *retHdf;
 // 	NEOERR *err;
@@ -233,7 +234,7 @@ static KMETHOD Hdf_copy(CTX, ksfp_t *sfp _RIX)
 // parses/loads the contents of the given string as HDF into the current HDF object
 static KMETHOD Hdf_readString(CTX, ksfp_t *sfp _RIX)
 {
-	HDF *hdf = RawPtr_to(HDF *, sfp[0]);
+	HDF *hdf = HDF_to(sfp[0]);
 	const char *data = S_text(sfp[1].s);
 	NEOERR *err;
 	err = hdf_read_string(hdf, data);
@@ -245,7 +246,7 @@ static KMETHOD Hdf_readString(CTX, ksfp_t *sfp _RIX)
 // This method is used to walk the HDF tree. Keep in mind that every node in the tree can have a value, a child, and a next peer.
 // static KMETHOD Hdf_objChild(CTX, ksfp_t *sfp _RIX)
 // {
-// 	HDF *hdf = RawPtr_to(HDF *, sfp[0]);
+// 	HDF *hdf = HDF_to(sfp[0]);
 // 	HDF *retHdf = hdf_obj_child(hdf);
 // 	kHdf *obj = (kHdf*)new_kObject(O_ct(sfp[K_RTNIDX].o), NULL);
 // 	obj->hdf = retHdf;
@@ -256,7 +257,7 @@ static KMETHOD Hdf_readString(CTX, ksfp_t *sfp _RIX)
 // Retrieves the HDF for the first child of the root of the subtree at hdfpath, or null if no child exists of that path or if the path doesn't exist.
 // static KMETHOD Hdf_getChild(CTX, ksfp_t *sfp _RIX)
 // {
-// 	HDF *hdf = RawPtr_to(HDF *, sfp[0]);
+// 	HDF *hdf = HDF_to(sfp[0]);
 // 	const char *name = S_text(sfp[1].s);
 // 	HDF *retHdf = hdf_get_child(hdf, name);
 // 	kHdf *obj = (kHdf*)new_kObject(O_ct(sfp[K_RTNIDX].o), NULL);
@@ -269,7 +270,7 @@ static KMETHOD Hdf_readString(CTX, ksfp_t *sfp _RIX)
 // TODO: Java版の名前はgetRootObj()。Java版に合わせて修正すべきかも。
 // static KMETHOD Hdf_objTop(CTX, ksfp_t *sfp _RIX)
 // {
-// 	HDF *hdf = RawPtr_to(HDF *, sfp[0]);
+// 	HDF *hdf = HDF_to(sfp[0]);
 // 	HDF *retHdf = hdf_obj_top(hdf);
 // 	kHdf *obj = (kHdf*)new_kObject(O_ct(sfp[K_RTNIDX].o), NULL);
 // 	obj->hdf = retHdf;
@@ -280,7 +281,7 @@ static KMETHOD Hdf_readString(CTX, ksfp_t *sfp _RIX)
 // This method is used to walk the HDF tree to the next peer.
 // static KMETHOD Hdf_objNext(CTX, ksfp_t *sfp _RIX)
 // {
-// 	HDF *hdf = RawPtr_to(HDF *, sfp[0]);
+// 	HDF *hdf = HDF_to(sfp[0]);
 // 	HDF *retHdf = hdf_obj_next(hdf);
 // 	kHdf *obj = (kHdf*)new_kObject(O_ct(sfp[K_RTNIDX].o), NULL);
 // 	obj->hdf = retHdf;
@@ -297,7 +298,7 @@ static KMETHOD Hdf_readString(CTX, ksfp_t *sfp _RIX)
 //   System.out.println(hdf_subnode.objName());
 static KMETHOD Hdf_objName(CTX, ksfp_t *sfp _RIX)
 {
-	HDF *hdf = RawPtr_to(HDF *, sfp[0]);
+	HDF *hdf = HDF_to(sfp[0]);
 	char *name = hdf_obj_name(hdf);
 
 	if (name == NULL) RETURN_(K_NULL);
@@ -307,7 +308,7 @@ static KMETHOD Hdf_objName(CTX, ksfp_t *sfp _RIX)
 //## void Hdf.setCopy(String name, String srcName)
 static KMETHOD Hdf_setCopy(CTX, ksfp_t *sfp _RIX)
 {
-	HDF *hdf = RawPtr_to(HDF *, sfp[0]);
+	HDF *hdf = HDF_to(sfp[0]);
 	const char *name = S_text(sfp[1].s);
 	const char *srcName = S_text(sfp[2].s);
 	NEOERR *err;
@@ -320,7 +321,7 @@ static KMETHOD Hdf_setCopy(CTX, ksfp_t *sfp _RIX)
 // Remove all nodes of the HDF subtree at name
 static KMETHOD Hdf_removeTree(CTX, ksfp_t *sfp _RIX)
 {
-	HDF *hdf = RawPtr_to(HDF *, sfp[0]);
+	HDF *hdf = HDF_to(sfp[0]);
 	const char *name = S_text(sfp[1].s);
 	NEOERR *err;
 	err = hdf_remove_tree(hdf, name);
@@ -332,7 +333,7 @@ static KMETHOD Hdf_removeTree(CTX, ksfp_t *sfp _RIX)
 // like writeFile, but first writes to a temp file then uses rename(2) to ensure updates are Atomic
 static KMETHOD Hdf_writeFileAtomic(CTX, ksfp_t *sfp _RIX)
 {
-	HDF *hdf = RawPtr_to(HDF *, sfp[0]);
+	HDF *hdf = HDF_to(sfp[0]);
 	const char *path = S_text(sfp[1].s);
 	NEOERR *err;
 	err = hdf_write_file_atomic(hdf, path);
@@ -344,7 +345,7 @@ static KMETHOD Hdf_writeFileAtomic(CTX, ksfp_t *sfp _RIX)
 // writes/serializes HDF dataset to file
 static KMETHOD Hdf_writeFile(CTX, ksfp_t *sfp _RIX)
 {
-	HDF *hdf = RawPtr_to(HDF *, sfp[0]);
+	HDF *hdf = HDF_to(sfp[0]);
 	const char *path = S_text(sfp[1].s);
 	NEOERR *err;
 	err = hdf_write_file(hdf, path);
@@ -356,7 +357,7 @@ static KMETHOD Hdf_writeFile(CTX, ksfp_t *sfp _RIX)
 // This method reads the contends of an on-disk HDF dataset into the current HDF object.
 static KMETHOD Hdf_readFile(CTX, ksfp_t *sfp _RIX)
 {
-	HDF *hdf = RawPtr_to(HDF *, sfp[0]);
+	HDF *hdf = HDF_to(sfp[0]);
 	const char *path = S_text(sfp[1].s);
 	NEOERR *err;
 	err = hdf_read_file(hdf, path);
@@ -370,7 +371,7 @@ static KMETHOD Hdf_readFile(CTX, ksfp_t *sfp _RIX)
 //## Cs Cs.new();
 static KMETHOD Cs_new(CTX, ksfp_t *sfp _RIX)
 {
-	HDF *hdf = RawPtr_to(HDF *, sfp[1]);
+	HDF *hdf = HDF_to(sfp[1]);
 	RETURN_(new_kObject(O_ct(sfp[K_RTNIDX].o), hdf));
 }
 
