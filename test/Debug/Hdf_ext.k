@@ -38,19 +38,19 @@ void test_objChild() {
 }
 test_objChild();
 
-// void test_objNext() {
-// 	Hdf hdf = new Hdf();
-// 	hdf.setValue("a.b.c", "c val");
-// 	hdf.setValue("d.e.f", "f value");
-// 	Hdf a = hdf.getObj("a");
-// 	Hdf b = hdf.getObj("a.b");
-// 	System.p(a.objName());
-// 	System.p(a.objNext().objName());
-// 	System.p(a.objNext().objNext().objName());
-// 	System.p(b.objName())
-// 	System.p(b.objNext().objName())
-// }
-// test_objNext();
+void test_objNext() {
+	Hdf hdf = new Hdf();
+	hdf.setValue("a.b.c", "c val");
+	hdf.setValue("d.e.f", "f value");
+	Hdf a = hdf.getObj("a");
+	Hdf b = hdf.getObj("a.b");
+	System.p(a.objName());
+	System.p(a.objNext().objName());
+	System.p(a.objNext().objNext().objName());
+	System.p(b.objName())
+	System.p(b.objNext().objName())
+}
+test_objNext();
 
 void test_getChild() {
 	Hdf hdf = new Hdf();
