@@ -29,6 +29,7 @@
 extern "C" {
 #endif
 
+#include <stdlib.h>
 #include <ClearSilver/ClearSilver.h>
 #include <ClearSilver/cgi/cgi.h>
 #include <konoha2/konoha2.h>
@@ -41,28 +42,106 @@ typedef struct hdf_t
 	int refer_cnt;
 } hdf_t;
 
+typedef struct hdf_conf_t
+{
+	HDF *hdf;
+	hdf_t *root_hdf_obj;
+} hdf_conf_t;
+
 typedef struct kHdf {
 	kObjectHeader h;
-	HDF *hdf;
+	hdf_t *hdf_obj;
+	hdf_t *root_hdf_obj;
 } kHdf;
 
-#define HDF_to(a)          ((kHdf *)a.o)->hdf
+#define HDF_to(a)          ((((kHdf *)a.o)->hdf_obj)->hdf)
+#define ROOT_OBJ_to(a)     (((kHdf *)a.o)->root_hdf_obj)
+
+static int malloc_cnt = 0;
+static int free_cnt = 0;
+static int init_cnt = 0;
+static int destroy_cnt = 0;
+
+static void dump_memset() {
+	printf("malloc: %d, free: %d, init: %d, destroy: %d\n", malloc_cnt, free_cnt, init_cnt, destroy_cnt);
+}
+
+// 参照元がある場合はメモリ解放しない。すべての参照元がなくなってから解放。
+static void hdf_t_free(hdf_t *h)
+{
+	if (h == NULL) return;
+	h->refer_cnt--;
+	if (h->refer_cnt == 0) {
+		hdf_destroy(&h->hdf);
+		destroy_cnt++;
+		free(h);
+		free_cnt++;
+	}
+}
+static hdf_t* hdf_t_init(HDF *hdf) {
+	hdf_t *hdf_obj = (hdf_t *)(malloc(sizeof(hdf_t)));
+	malloc_cnt++;
+	if (hdf == NULL) {
+		hdf_init(&hdf_obj->hdf);
+		init_cnt++;
+	} else {
+		hdf_obj->hdf = hdf;
+	}
+	hdf_obj->refer_cnt = 1;
+	return hdf_obj;
+}
+
+#define new_kHdf(C, H, P)	Knew_Hdf(_ctx, C, H, P)
+static kHdf* Knew_Hdf(CTX, kclass_t *ct, HDF *hdf, kHdf *parent) {
+	if (hdf != NULL && parent != NULL) {
+		hdf_conf_t conf = {
+			.hdf = hdf,
+			.root_hdf_obj = (parent->root_hdf_obj == NULL ? parent->hdf_obj : parent->root_hdf_obj)
+		};
+		return (kHdf*)new_kObject(ct, &conf);
+	} else {
+		return (kHdf*)new_kObject(ct, NULL);
+	}
+}
 
 static void kHdf_init(CTX, kObject *o, void *conf)
 {
 	kHdf *h = (kHdf *)o;
-	hdf_init(&h->hdf);
-	// printf("init:%p\n", o);
+	HDF *src = NULL;
+	if (conf != NULL) {
+		hdf_conf_t *c = (hdf_conf_t *)conf;
+		src = c->hdf;
+		h->root_hdf_obj = NULL;
+	printf("conf->root_hdf_obj:%p\n", c->root_hdf_obj);
+		if (c->root_hdf_obj != NULL) {
+			h->root_hdf_obj = c->root_hdf_obj;
+			h->root_hdf_obj->refer_cnt++;
+	printf("refer_cnt:%d\n", h->root_hdf_obj->refer_cnt);
+		}
+	}
+	h->hdf_obj = hdf_t_init(src);
+	dump_memset();
 }
 
 static void kHdf_free(CTX, kObject *o)
 {
-	kHdf *h = (kHdf *)o;
-	if(h->hdf != NULL) {
-		hdf_destroy(&h->hdf);
-		h->hdf = NULL;
+	kHdf *self = (kHdf *)o;
+	if(self->hdf_obj != NULL) {
+		// if (self->root_hdf_obj != NULL && self->hdf_obj->hdf == self->root_hdf_obj->hdf) {
+		if (self->root_hdf_obj != NULL) {
+			// HDF*はルートでのみ解放する
+			free(self->hdf_obj);
+			free_cnt++;
+		} else {
+			hdf_t_free(self->hdf_obj);
+		}
+		hdf_t_free(self->root_hdf_obj);
+		self->hdf_obj = NULL;
+		self->root_hdf_obj = NULL;
 	}
+	dump_memset();
 }
+
 
 typedef struct kCs {
 	kObjectHeader h;
@@ -162,15 +241,15 @@ static KMETHOD Hdf_dump(CTX, ksfp_t *sfp _RIX)
 
 //## HDF Hdf.getObj(String name)
 // This method allows you to retrieve the HDF object which represents the HDF subtree ad the named hdfpath.
-// static KMETHOD Hdf_getObj(CTX, ksfp_t *sfp _RIX)
-// {
-// 	HDF *hdf = HDF_to(sfp[0]);
-// 	const char *name = S_text(sfp[1].s);
-// 	HDF *retHdf = hdf_get_obj(hdf, name);
-// 	kHdf *obj = (kHdf*)new_kObject(O_ct(sfp[K_RTNIDX].o), NULL);
-// 	obj->hdf = retHdf;
-// 	RETURN_(obj);
-// }
+static KMETHOD Hdf_getObj(CTX, ksfp_t *sfp _RIX)
+{
+	kHdf *self = (kHdf *)sfp[0].o;
+	HDF *hdf = HDF_to(sfp[0]);
+	const char *name = S_text(sfp[1].s);
+	HDF *retHdf = hdf_get_obj(hdf, name);
+	kHdf *obj = (kHdf*)new_kHdf(O_ct(sfp[K_RTNIDX].o), retHdf, self);
+	RETURN_(obj);
+}
 
 //## String Hdf.objValue()
 // This method retrieves the value of the current HDF node. Here is a sample code snippit:
@@ -414,7 +493,7 @@ static kbool_t clearsilver_initPackage(CTX, kKonohaSpace *ks, int argc, const ch
 		_Public, _F(Hdf_writeString), TY_String	, TY_Hdf, MN_("writeString"), 0, 
 		_Public, _F(Hdf_readString)	, TY_void	, TY_Hdf, MN_("readString")	, 1, TY_String, FN_("data"),
 		_Public, _F(Hdf_dump)		, TY_void	, TY_Hdf, MN_("dump")		, 1, TY_String, FN_("prefix"),
-//		_Public, _F(Hdf_getObj)		, TY_Hdf	, TY_Hdf, MN_("getObj")		, 1, TY_String, FN_("name"),
+		_Public, _F(Hdf_getObj)		, TY_Hdf	, TY_Hdf, MN_("getObj")		, 1, TY_String, FN_("name"),
 		_Public, _F(Hdf_objValue)	, TY_String	, TY_Hdf, MN_("objValue")	, 0, 
 		_Public, _F(Hdf_objName)	, TY_String	, TY_Hdf, MN_("objName")	, 0, 
 		_Public, _F(Hdf_getIntValue), TY_Int	, TY_Hdf, MN_("getIntValue"), 2, TY_String, FN_("name"), TY_Int, FN_("defaultValue"),

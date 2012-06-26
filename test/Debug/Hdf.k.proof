@@ -10,6 +10,8 @@ efg = efg val
 }
 
  - (Hdf.k:45) (null)
+ - (Hdf.k:46) (null)
+ - (Hdf.k:47) efg val
  - (Hdf.k:55) 1
  - (Hdf.k:56) 3
  - (Hdf.k:57) 3
@@ -27,6 +29,7 @@ efg = efg val
 }
 
  - (Hdf.k:84) (null)
+ - (Hdf.k:85) a
  - (Hdf.k:92) key = 1
 
  - (Hdf.k:93) 1

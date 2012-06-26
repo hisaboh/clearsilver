@@ -40,11 +40,11 @@ assert(test_dump());
 void test_objValue() {
 	Hdf hdf = new Hdf();
 	hdf.setValue("abc.cde", "efg val");
-	// Hdf subnode1 = hdf.getObj("abc");
-	// Hdf subnode2 = hdf.getObj("abc.cde");
+	Hdf subnode1 = hdf.getObj("abc");
+	Hdf subnode2 = hdf.getObj("abc.cde");
 	System.p(hdf.objValue());
-	// System.p(subnode1.objValue());
-	// System.p(subnode2.objValue());
+	System.p(subnode1.objValue());
+	System.p(subnode2.objValue());
 }
 test_objValue();
 
@@ -80,9 +80,9 @@ void test_objName() {
 	Hdf hdf = new Hdf();
 	hdf.setValue("a.b.c", "c val");
 	hdf.setValue("d.e.f", "f value");
-	// Hdf a = hdf.getObj("a");
+	Hdf a = hdf.getObj("a");
 	System.p(hdf.objName());
-	// System.p(a.objName());
+	System.p(a.objName());
 }
 test_objName();
 
