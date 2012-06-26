@@ -471,7 +471,7 @@ static KMETHOD Cs_new(CTX, ksfp_t *sfp _RIX)
 }
 
 /* ======================================================================== */
-//## @Native @Static String Cgi.urlEscape(String url);
+//## @Static String Cgi.urlEscape(String url);
 static KMETHOD Cgi_urlEscape(CTX, ksfp_t *sfp _RIX)
 {
     char *buf = NULL;
@@ -481,15 +481,15 @@ static KMETHOD Cgi_urlEscape(CTX, ksfp_t *sfp _RIX)
 	RETURN_(string);
 }
 
-//## @Native @Static String Cgi.htmlEscape(String buf);
-// KMETHOD Cgi_htmlEscape(CTX ctx, ksfp_t *sfp _RIX)
-// {
-//     char *esc = NULL;
-//     cgi_html_escape_strfunc(S_totext(sfp[1].s), &esc);
-//     kString *s = new_String(ctx, esc);
-//     free(esc);
-//     RETURN_(s);
-// }
+//## @Static String Cgi.htmlEscape(String html);
+static KMETHOD Cgi_htmlEscape(CTX, ksfp_t *sfp _RIX)
+{
+    char *buf = NULL;
+    cgi_html_escape_strfunc(S_text(sfp[1].s), &buf);
+	kString *string = new_kString(buf, strlen(buf), 0);
+	free(buf);
+	RETURN_(string);
+}
 
 
 
@@ -559,6 +559,7 @@ static kbool_t clearsilver_initPackage(CTX, kKonohaSpace *ks, int argc, const ch
 		_Public, _F(Hdf_setSymLink)	, TY_void	, TY_Hdf, MN_("setSymLink")	, 2, TY_String, FN_("name"), TY_String, FN_("destName"),
 		_Public, _F(Cs_new)     	, TY_Cs 	, TY_Cs	, MN_("new")		, 1, TY_Hdf, FN_("hdf"),
 		_Public|_Static, _F(Cgi_urlEscape), TY_String, TY_Cgi, MN_("urlEscape")		, 1, TY_String, FN_("url"),
+		_Public|_Static, _F(Cgi_htmlEscape), TY_String, TY_Cgi, MN_("htmlEscape")		, 1, TY_String, FN_("html"),
 		DEND,
 	};
 	kKonohaSpace_loadMethodData(ks, MethodData);
