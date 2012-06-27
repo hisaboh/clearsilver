@@ -71,6 +71,7 @@ static void hdf_t_free(hdf_t *h)
 {
 	if (h == NULL) return;
 	h->refer_cnt--;
+	printf("refer_cnt:%d\n", h->refer_cnt);
 	if (h->refer_cnt == 0) {
 		hdf_destroy(&h->hdf);
 		destroy_cnt++;
@@ -89,6 +90,12 @@ static hdf_t* hdf_t_init(HDF *hdf) {
 	}
 	hdf_obj->refer_cnt = 1;
 	return hdf_obj;
+}
+
+static void attach_root_hdf_t(hdf_t *org, hdf_t **dest)
+{
+	org->refer_cnt++;
+	*dest = org;
 }
 
 #define new_kHdf(C, H, P)	Knew_Hdf(_ctx, C, H, P)
@@ -113,11 +120,14 @@ static void kHdf_init(CTX, kObject *o, void *conf)
 		src = c->hdf;
 		h->root_hdf_obj = NULL;
 		if (c->root_hdf_obj != NULL) {
-			h->root_hdf_obj = c->root_hdf_obj;
-			h->root_hdf_obj->refer_cnt++;
+			attach_root_hdf_t(c->root_hdf_obj, &h->root_hdf_obj);
 		}
 	}
-	h->hdf_obj = hdf_t_init(src);
+	hdf_t * hdf_obj = hdf_t_init(src);
+	h->hdf_obj = hdf_obj;
+	if (conf == NULL) {
+		attach_root_hdf_t(hdf_obj, &h->root_hdf_obj);
+	}
 	dump_memset();
 }
 
@@ -126,13 +136,14 @@ static void kHdf_free(CTX, kObject *o)
 	kHdf *self = (kHdf *)o;
 	if(self->hdf_obj != NULL) {
 		// if (self->root_hdf_obj != NULL && self->hdf_obj->hdf == self->root_hdf_obj->hdf) {
-		if (self->root_hdf_obj != NULL) {
-			// HDF*はルートでのみ解放する
-			free(self->hdf_obj);
-			free_cnt++;
-		} else {
-			hdf_t_free(self->hdf_obj);
-		}
+		// if (self->root_hdf_obj != NULL) {
+		// 	// HDF*はルートでのみ解放する
+		// 	free(self->hdf_obj);
+		// 	free_cnt++;
+		// } else {
+		// 	hdf_t_free(self->hdf_obj);
+		// }
+		hdf_t_free(self->hdf_obj);
 		hdf_t_free(self->root_hdf_obj);
 		self->hdf_obj = NULL;
 		self->root_hdf_obj = NULL;
