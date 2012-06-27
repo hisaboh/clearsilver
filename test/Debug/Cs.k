@@ -23,3 +23,16 @@ boolean test_parseFile() {
 	return true;
 }
 assert(test_parseFile());
+
+int render_callback(String s) {
+	System.p(s);
+	return 0;
+}
+
+void test_render() {
+	Hdf hdf = new Hdf();
+	Cs cs = new Cs(hdf);
+	cs.parseString("あいうえお");
+	cs.render(render_callback);
+}
+test_render();

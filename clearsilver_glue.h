@@ -496,6 +496,63 @@ static KMETHOD Cs_parseFile(CTX, ksfp_t *sfp _RIX)
 	RETURNvoid_();
 }
 
+typedef struct render_arg {
+    CTX_t ctx;
+    kFunc *fo;
+} render_arg_t;
+
+static NEOERR *render_cb(void *v, char *s)
+{
+    render_arg_t *arg = (render_arg_t *)v;
+    CTX = arg->ctx;
+    kFunc *fo = arg->fo;
+    BEGIN_LOCAL(lsfp, K_CALLDELTA + 1);
+    KSETv(lsfp[K_CALLDELTA+0].o, new_kString(s, strlen(s), 0));
+    KCALL(lsfp, 0, fo->mtd, 1, knull(CT_Int));
+    END_LOCAL();
+
+    // KNH_SETv(ctx, lsfp[K_CALLDELTA + 1].o, new_String(ctx, s));
+    // knh_Func_invoke(ctx, fo, lsfp, 1/* argc */);
+    // END_LOCAL(ctx, lsfp);
+    // switch (lsfp[0].ivalue) {
+    // case STATUS_OK_INT:
+    //     return STATUS_OK;
+    // case INTERNAL_ERR_INT:
+    //     return INTERNAL_ERR;
+    // default:
+    //     /* unknow return value */
+    //     return STATUS_OK;
+    // }
+    return STATUS_OK;
+}
+
+//## void Cs.render(Func<String=>int> cb);
+static KMETHOD Cs_render(CTX, ksfp_t *sfp _RIX)
+{
+    CSPARSE *cs = S_CSPARSE(sfp[0]);
+    kFunc *fo = sfp[1].fo;
+    render_arg_t arg = {
+        .ctx = _ctx,
+        .fo = fo
+    };
+    NEOERR *err = cs_render(cs, &arg, render_cb);
+    // TODO: エラー処理
+    RETURNvoid_();
+}
+
+//## void Cs.dump(Func<String=>int> cb);
+static KMETHOD Cs_dump(CTX, ksfp_t *sfp _RIX)
+{
+    CSPARSE *cs = S_CSPARSE(sfp[0]);
+    kFunc *fo = sfp[1].fo;
+    render_arg_t arg = {
+        .ctx = _ctx,
+        .fo = fo
+    };
+    NEOERR *err = cs_dump(cs, &arg, render_cb);
+    RETURNvoid_();
+}
+
 /* ======================================================================== */
 //## @Static String Cgi.urlEscape(String url);
 static KMETHOD Cgi_urlEscape(CTX, ksfp_t *sfp _RIX)
@@ -586,6 +643,8 @@ static kbool_t clearsilver_initPackage(CTX, kKonohaSpace *ks, int argc, const ch
 		_Public, _F(Cs_new)     	, TY_Cs 	, TY_Cs	, MN_("new")		, 1, TY_Hdf, FN_("hdf"),
 		_Public, _F(Cs_parseString) , TY_void 	, TY_Cs	, MN_("parseString"), 1, TY_String, FN_("template"),
 		_Public, _F(Cs_parseFile) 	, TY_void 	, TY_Cs	, MN_("parseFile")	, 1, TY_String, FN_("path"),
+		_Public, _F(Cs_render) 		, TY_void 	, TY_Cs	, MN_("render")		, 1, TY_Func, FN_("fo"),
+		_Public, _F(Cs_dump) 		, TY_void 	, TY_Cs	, MN_("dump")		, 1, TY_Func, FN_("fo"),
 		_Public|_Static, _F(Cgi_urlEscape), TY_String, TY_Cgi, MN_("urlEscape")		, 1, TY_String, FN_("url"),
 		_Public|_Static, _F(Cgi_htmlEscape), TY_String, TY_Cgi, MN_("htmlEscape")		, 1, TY_String, FN_("html"),
 		DEND,
