@@ -214,15 +214,9 @@ static KMETHOD Hdf_setValue(CTX, ksfp_t *sfp _RIX)
 	const char *value = S_text(sfp[2].s);
 
 	NEOERR *err = hdf_set_value(hdf, name, value);
-	// TODO: エラー処理
+
 	if (err != STATUS_OK) {
-		STRING err_str;
-		nerr_error_string(err, &err_str);
-		kString *s = new_kString(err_str.buf, strlen(err_str.buf), 0);
-		printf("%s\n", S_text(s));
-		ktrace(_SystemFault,
-				KEYVALUE_s("@", "hdf_set_value"),
-				KEYVALUE_s("errstr", s));
+		TRACE_NEOERR(_DeveloperFault, "hdf_set_value");
 	}
 	RETURNvoid_();
 }
@@ -234,9 +228,11 @@ static KMETHOD Hdf_setIntValue(CTX, ksfp_t *sfp _RIX)
 	const char *name = S_text(sfp[1].s);
 	int value = sfp[2].ivalue;
 
-	NEOERR *err;
-	err = hdf_set_int_value(hdf, name, value);
-	// TODO: エラー処理
+	NEOERR *err = hdf_set_int_value(hdf, name, value);
+
+	if (err != STATUS_OK) {
+		TRACE_NEOERR(_DeveloperFault, "hdf_set_int_value");
+	}
 	RETURNvoid_();
 }
 
@@ -327,10 +323,11 @@ static KMETHOD Hdf_copy(CTX, ksfp_t *sfp _RIX)
 	HDF *hdf = S_HDF(sfp[0]);
 	const char *name = S_text(sfp[1].s);
 	HDF *src = S_HDF(sfp[2]);
-	NEOERR *err;
-	err = hdf_copy(hdf, name, src);
-	// TODO: エラー処理
+	NEOERR *err = hdf_copy(hdf, name, src);
 
+	if (err != STATUS_OK) {
+		TRACE_NEOERR(_DeveloperFault, "hdf_get_node");
+	}
 	RETURNvoid_();
 }
 
@@ -342,9 +339,11 @@ static KMETHOD Hdf_getNode(CTX, ksfp_t *sfp _RIX)
 	HDF *hdf = S_HDF(sfp[0]);
 	const char *name = S_text(sfp[1].s);
 	HDF *retHdf;
-	NEOERR *err;
-	err = hdf_get_node(hdf, name, &retHdf);
-	// TODO: エラー処理
+	NEOERR *err = hdf_get_node(hdf, name, &retHdf);
+
+	if (err != STATUS_OK) {
+		TRACE_NEOERR(_DeveloperFault, "hdf_get_node");
+	}
 	RETURN_(new_kHdf(O_ct(sfp[K_RTNIDX].o), retHdf, S_kHdf(sfp[0])));
 }
 
@@ -354,8 +353,7 @@ static KMETHOD Hdf_readString(CTX, ksfp_t *sfp _RIX)
 {
 	HDF *hdf = S_HDF(sfp[0]);
 	const char *data = S_text(sfp[1].s);
-	NEOERR *err;
-	err = hdf_read_string(hdf, data);
+	NEOERR *err = hdf_read_string(hdf, data);
 
 	if (err != STATUS_OK) {
 		TRACE_NEOERR(_DeveloperFault, "hdf_read_string");
