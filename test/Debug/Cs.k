@@ -14,4 +14,4 @@ boolean test_parseString() {
 	cs.parseString("hogehoge");
 	return true;
 }
-assert(test_parseString());
+// assert(test_parseString());

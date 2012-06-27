@@ -112,11 +112,9 @@ static void kHdf_init(CTX, kObject *o, void *conf)
 		hdf_conf_t *c = (hdf_conf_t *)conf;
 		src = c->hdf;
 		h->root_hdf_obj = NULL;
-	printf("conf->root_hdf_obj:%p\n", c->root_hdf_obj);
 		if (c->root_hdf_obj != NULL) {
 			h->root_hdf_obj = c->root_hdf_obj;
 			h->root_hdf_obj->refer_cnt++;
-	printf("refer_cnt:%d\n", h->root_hdf_obj->refer_cnt);
 		}
 	}
 	h->hdf_obj = hdf_t_init(src);
@@ -148,19 +146,28 @@ static void kHdf_free(CTX, kObject *o)
 typedef struct kCs {
 	kObjectHeader h;
 	CSPARSE *cs;
+	hdf_t *root_hdf_obj;
 } kCs;
 
 static void kCs_init(CTX, kObject *o, void *conf) 
 {
 	kCs *c = (kCs *)o;
-	HDF *hdf = (HDF *)conf;
-	cs_init(&c->cs, hdf);
-	cgi_register_strfuncs(c->cs);
+	kHdf *h = (kHdf *)conf;
+	if (h != NULL) {
+		c->root_hdf_obj = h->root_hdf_obj == NULL ? h->hdf_obj : h->root_hdf_obj;
+		c->root_hdf_obj->refer_cnt++;
+		cs_init(&c->cs, h->hdf_obj->hdf);
+		cgi_register_strfuncs(c->cs);
+	}
 }
 
 static void kCs_free(CTX, kObject *o) 
 {
 	kCs *c = (kCs *)o;
+	if (c->root_hdf_obj != NULL) {
+		hdf_t_free(c->root_hdf_obj);
+		c->root_hdf_obj = NULL;
+	}
 	if (c->cs != NULL) {
 		cs_destroy(&c->cs);
 		c->cs = NULL;
@@ -468,7 +475,7 @@ static KMETHOD Hdf_setSymLink(CTX, ksfp_t *sfp _RIX)
 //## Cs Cs.new();
 static KMETHOD Cs_new(CTX, ksfp_t *sfp _RIX)
 {
-	HDF *hdf = S_HDF(sfp[1]);
+	kHdf *hdf = S_kHdf(sfp[1]);
 	RETURN_(new_kObject(O_ct(sfp[K_RTNIDX].o), hdf));
 }
 
