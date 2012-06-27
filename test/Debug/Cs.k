@@ -31,8 +31,21 @@ int render_callback(String s) {
 
 void test_render() {
 	Hdf hdf = new Hdf();
+	hdf.setValue("name", "ワールド")
 	Cs cs = new Cs(hdf);
-	cs.parseString("あいうえお");
+	cs.parseString("hello <?cs var:name ?>");
 	cs.render(render_callback);
 }
 test_render();
+
+int dump_callback(String s) {
+	System.p(s);
+	return 0;
+}
+void test_dump() {
+	Hdf hdf = new Hdf();
+	Cs cs = new Cs(hdf);
+	cs.parseString("かきくけこ");
+	cs.dump(dump_callback);
+}
+test_dump();

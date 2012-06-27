@@ -540,8 +540,8 @@ static NEOERR *render_cb(void *v, char *s)
     render_arg_t *arg = (render_arg_t *)v;
     CTX = arg->ctx;
     kFunc *fo = arg->fo;
-    BEGIN_LOCAL(lsfp, K_CALLDELTA + 1);
-    KSETv(lsfp[K_CALLDELTA+0].o, new_kString(s, strlen(s), 0));
+    BEGIN_LOCAL(lsfp, K_CALLDELTA + 2);
+    KSETv(lsfp[K_CALLDELTA+1].o, new_kString(s, strlen(s), 0));
     KCALL(lsfp, 0, fo->mtd, 1, knull(CT_Int));
     END_LOCAL();
 
@@ -655,6 +655,10 @@ static kbool_t clearsilver_initPackage(CTX, kKonohaSpace *ks, int argc, const ch
 #define _Public   kMethod_Public
 #define _Static   kMethod_Static
 #define _F(F)   (intptr_t)(F)
+
+	kparam_t ps = {TY_String, FN_("str")};
+	kclass_t *CT_Func_IntString = kClassTable_Generics(CT_Func, TY_Int, 1, &ps);
+	kcid_t TY_Func_IntString = CT_Func_IntString->cid;
 	intptr_t MethodData[] = {
 		_Public, _F(Hdf_new)     	, TY_Hdf 	, TY_Hdf, MN_("new")		, 0,
 		_Public, _F(Hdf_setValue)	, TY_void	, TY_Hdf, MN_("setValue")	, 2, TY_String, FN_("name"), TY_String, FN_("value"),
@@ -682,8 +686,8 @@ static kbool_t clearsilver_initPackage(CTX, kKonohaSpace *ks, int argc, const ch
 		_Public, _F(Cs_new)     	, TY_Cs 	, TY_Cs	, MN_("new")		, 1, TY_Hdf, FN_("hdf"),
 		_Public, _F(Cs_parseString) , TY_void 	, TY_Cs	, MN_("parseString"), 1, TY_String, FN_("template"),
 		_Public, _F(Cs_parseFile) 	, TY_void 	, TY_Cs	, MN_("parseFile")	, 1, TY_String, FN_("path"),
-		_Public, _F(Cs_render) 		, TY_void 	, TY_Cs	, MN_("render")		, 1, TY_Func, FN_("fo"),
-		_Public, _F(Cs_dump) 		, TY_void 	, TY_Cs	, MN_("dump")		, 1, TY_Func, FN_("fo"),
+		_Public, _F(Cs_render) 		, TY_void 	, TY_Cs	, MN_("render")		, 1, TY_Func_IntString, FN_("fo"),
+		_Public, _F(Cs_dump) 		, TY_void 	, TY_Cs	, MN_("dump")		, 1, TY_Func_IntString, FN_("fo"),
 		_Public|_Static, _F(Cgi_urlEscape), TY_String, TY_Cgi, MN_("urlEscape")		, 1, TY_String, FN_("url"),
 		_Public|_Static, _F(Cgi_htmlEscape), TY_String, TY_Cgi, MN_("htmlEscape")		, 1, TY_String, FN_("html"),
 		DEND,
