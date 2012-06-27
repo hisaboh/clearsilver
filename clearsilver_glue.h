@@ -78,6 +78,7 @@ static void hdf_t_free(hdf_t *h)
 		free(h);
 		free_cnt++;
 	}
+	dump_memset();
 }
 static hdf_t* hdf_t_init() {
 	hdf_t *hdf_obj = (hdf_t *)(malloc(sizeof(hdf_t)));
@@ -85,6 +86,7 @@ static hdf_t* hdf_t_init() {
 	hdf_init(&hdf_obj->hdf);
 	init_cnt++;
 	hdf_obj->refer_cnt = 0;
+	dump_memset();
 	return hdf_obj;
 }
 
@@ -119,7 +121,6 @@ static void kHdf_init(CTX, kObject *o, void *conf)
 		h->hdf = hdf_obj->hdf;
 		attach_root_hdf_t(hdf_obj, &h->root_hdf_obj);
 	}
-	dump_memset();
 }
 
 static void kHdf_free(CTX, kObject *o)
@@ -132,7 +133,6 @@ static void kHdf_free(CTX, kObject *o)
 	hdf_t_free(self->root_hdf_obj);
 	self->root_hdf_obj = NULL;
 	self->hdf = NULL;
-	dump_memset();
 }
 
 
@@ -479,10 +479,22 @@ static KMETHOD Cs_parseString(CTX, ksfp_t *sfp _RIX)
 	CSPARSE *cs = S_CSPARSE(sfp[0]);
 	char *t = strdup(S_text(sfp[1].s));
 	size_t len = S_size(sfp[1].s);
-	cs_parse_string(cs, t, len);
+	NEOERR *err;
+	err = cs_parse_string(cs, t, len);
+	// TODO: エラー処理
 	RETURNvoid_();
 }
 
+//## void Cs.parseFile(String path)
+static KMETHOD Cs_parseFile(CTX, ksfp_t *sfp _RIX)
+{
+	CSPARSE *cs = S_CSPARSE(sfp[0]);
+	const char *path = S_text(sfp[1].s);
+	NEOERR *err;
+	err = cs_parse_file(cs, path);
+	// TODO: エラー処理
+	RETURNvoid_();
+}
 
 /* ======================================================================== */
 //## @Static String Cgi.urlEscape(String url);
@@ -573,6 +585,7 @@ static kbool_t clearsilver_initPackage(CTX, kKonohaSpace *ks, int argc, const ch
 		_Public, _F(Hdf_setSymLink)	, TY_void	, TY_Hdf, MN_("setSymLink")	, 2, TY_String, FN_("name"), TY_String, FN_("destName"),
 		_Public, _F(Cs_new)     	, TY_Cs 	, TY_Cs	, MN_("new")		, 1, TY_Hdf, FN_("hdf"),
 		_Public, _F(Cs_parseString) , TY_void 	, TY_Cs	, MN_("parseString"), 1, TY_String, FN_("template"),
+		_Public, _F(Cs_parseFile) 	, TY_void 	, TY_Cs	, MN_("parseFile")	, 1, TY_String, FN_("path"),
 		_Public|_Static, _F(Cgi_urlEscape), TY_String, TY_Cgi, MN_("urlEscape")		, 1, TY_String, FN_("url"),
 		_Public|_Static, _F(Cgi_htmlEscape), TY_String, TY_Cgi, MN_("htmlEscape")		, 1, TY_String, FN_("html"),
 		DEND,

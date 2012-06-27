@@ -26,6 +26,8 @@ hdf_set_symlink
 
 cs_init
 cs_destroy
+cs_parse_string
+cs_parse_file
 
 cgi_url_escape
 html_escape_strfunc
@@ -51,7 +53,12 @@ hdf_dump_format	// FILE fpの対応方法不明
 
 
 /// 未対応 ///////////////////////////////////
-
+cs_dump
+cs_render
+cs_register_esc_strfunc
+cs_register_fileload
+cs_register_strfunc
+cs_register_esc_function
 
 cgi_debug_init
 cgi_parse
@@ -84,15 +91,6 @@ cgiwrap_writevf
 cgiwrap_read
 cgiwrap_write
 cgiwrap_getenv
-
-cs_dump
-cs_render
-cs_register_esc_strfunc
-cs_register_fileload
-cs_register_strfunc
-cs_parse_string
-cs_parse_file
-cs_register_esc_function
 
 dictDestroy
 dictCleanup
