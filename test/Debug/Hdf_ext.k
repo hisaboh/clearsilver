@@ -71,13 +71,13 @@ void test_objTop() {
 }
 test_objTop();
 
-void test_setSymLink() {
-	Hdf hdf = new Hdf();
-	hdf.setValue("a.b.c", "c val");
-	hdf.setValue("d.e.f", "f val");
-	System.p(hdf.writeString());
-	hdf.setSymLink("a.b.c", "d.e");
-	System.p(hdf.writeString());
-	System.p(hdf.getObj("a.b.c").objName());
-}
-test_setSymLink();
+// void test_setSymLink() {
+// 	Hdf hdf = new Hdf();
+// 	hdf.setValue("a.b.c", "c val");
+// 	hdf.setValue("d.e.f", "f val");
+// 	System.p(hdf.writeString());
+// 	hdf.setSymLink("a.b.c", "d.e");
+// 	System.p(hdf.writeString());
+// 	System.p(hdf.getObj("a.b.c").objName());
+// }
+// test_setSymLink();
