@@ -255,9 +255,10 @@ static KMETHOD Hdf_writeString(CTX, ksfp_t *sfp _RIX)
 {
 	HDF *hdf = S_HDF(sfp[0]);
 	char *ret = NULL;
-	NEOERR* err;
-	err = hdf_write_string(hdf, &ret);
-	// TODO: エラー処理
+	NEOERR* err = hdf_write_string(hdf, &ret);
+	if (err != STATUS_OK) {
+		TRACE_NEOERR(_SystemFault, "hdf_write_string");
+	}
 	kString *string = new_kString(ret, strlen(ret), 0);
 	free(ret);
 	RETURN_(string);
@@ -270,9 +271,10 @@ static KMETHOD Hdf_dump(CTX, ksfp_t *sfp _RIX)
 {
 	HDF *hdf = S_HDF(sfp[0]);
 	const char *prefix = S_text(sfp[1].s);
-	NEOERR* err;
-	err = hdf_dump(hdf, prefix);
-	// TODO: エラー処理
+	NEOERR* err = hdf_dump(hdf, prefix);
+	if (err != STATUS_OK) {
+		TRACE_NEOERR(_SystemFault, "hdf_dump");
+	}
 	RETURNvoid_();
 }
 
@@ -422,9 +424,10 @@ static KMETHOD Hdf_setCopy(CTX, ksfp_t *sfp _RIX)
 	HDF *hdf = S_HDF(sfp[0]);
 	const char *name = S_text(sfp[1].s);
 	const char *srcName = S_text(sfp[2].s);
-	NEOERR *err;
-	err = hdf_set_copy(hdf, name, srcName);
-	// TODO: エラー処理
+	NEOERR *err = hdf_set_copy(hdf, name, srcName);
+	if (err != STATUS_OK) {
+		TRACE_NEOERR(_DeveloperFault, "hdf_set_copy");
+	}
 	RETURNvoid_();
 }
 
@@ -434,9 +437,10 @@ static KMETHOD Hdf_removeTree(CTX, ksfp_t *sfp _RIX)
 {
 	HDF *hdf = S_HDF(sfp[0]);
 	const char *name = S_text(sfp[1].s);
-	NEOERR *err;
-	err = hdf_remove_tree(hdf, name);
-	// TODO: エラー処理
+	NEOERR *err = hdf_remove_tree(hdf, name);
+	if (err != STATUS_OK) {
+		TRACE_NEOERR(_DeveloperFault, "hdf_remove_tree");
+	}
 	RETURNvoid_();
 }
 
@@ -446,9 +450,10 @@ static KMETHOD Hdf_writeFileAtomic(CTX, ksfp_t *sfp _RIX)
 {
 	HDF *hdf = S_HDF(sfp[0]);
 	const char *path = S_text(sfp[1].s);
-	NEOERR *err;
-	err = hdf_write_file_atomic(hdf, path);
-	// TODO: エラー処理
+	NEOERR *err = hdf_write_file_atomic(hdf, path);
+	if (err != STATUS_OK) {
+		TRACE_NEOERR(_DeveloperFault, "hdf_write_file_atomic");
+	}
 	RETURNvoid_();
 }
 
@@ -458,9 +463,10 @@ static KMETHOD Hdf_writeFile(CTX, ksfp_t *sfp _RIX)
 {
 	HDF *hdf = S_HDF(sfp[0]);
 	const char *path = S_text(sfp[1].s);
-	NEOERR *err;
-	err = hdf_write_file(hdf, path);
-	// TODO: エラー処理
+	NEOERR *err = hdf_write_file(hdf, path);
+	if (err != STATUS_OK) {
+		TRACE_NEOERR(_DeveloperFault, "hdf_write_file");
+	}
 	RETURNvoid_();
 }
 
@@ -470,9 +476,10 @@ static KMETHOD Hdf_readFile(CTX, ksfp_t *sfp _RIX)
 {
 	HDF *hdf = S_HDF(sfp[0]);
 	const char *path = S_text(sfp[1].s);
-	NEOERR *err;
-	err = hdf_read_file(hdf, path);
-	// TODO: エラー処理
+	NEOERR *err = hdf_read_file(hdf, path);
+	if (err != STATUS_OK) {
+		TRACE_NEOERR(_DeveloperFault, "hdf_read_file");
+	}
 	RETURNvoid_();
 }
 
@@ -483,9 +490,10 @@ static KMETHOD Hdf_setSymLink(CTX, ksfp_t *sfp _RIX)
 	HDF *hdf = S_HDF(sfp[0]);
 	const char *name = S_text(sfp[1].s);
 	const char *destName = S_text(sfp[2].s);
-	NEOERR *err;
-	err = hdf_set_symlink(hdf, name, destName);
-	// TODO: エラー処理
+	NEOERR *err = hdf_set_symlink(hdf, name, destName);
+	if (err != STATUS_OK) {
+		TRACE_NEOERR(_DeveloperFault, "hdf_set_symlink");
+	}
 	RETURNvoid_();
 }
 
@@ -503,9 +511,10 @@ static KMETHOD Cs_parseString(CTX, ksfp_t *sfp _RIX)
 	CSPARSE *cs = S_CSPARSE(sfp[0]);
 	char *t = strdup(S_text(sfp[1].s));
 	size_t len = S_size(sfp[1].s);
-	NEOERR *err;
-	err = cs_parse_string(cs, t, len);
-	// TODO: エラー処理
+	NEOERR *err = cs_parse_string(cs, t, len);
+	if (err != STATUS_OK) {
+		TRACE_NEOERR(_DeveloperFault, "cs_parse_string");
+	}
 	RETURNvoid_();
 }
 
@@ -514,9 +523,10 @@ static KMETHOD Cs_parseFile(CTX, ksfp_t *sfp _RIX)
 {
 	CSPARSE *cs = S_CSPARSE(sfp[0]);
 	const char *path = S_text(sfp[1].s);
-	NEOERR *err;
-	err = cs_parse_file(cs, path);
-	// TODO: エラー処理
+	NEOERR *err = cs_parse_file(cs, path);
+	if (err != STATUS_OK) {
+		TRACE_NEOERR(_DeveloperFault, "cs_parse_file");
+	}
 	RETURNvoid_();
 }
 
@@ -560,7 +570,9 @@ static KMETHOD Cs_render(CTX, ksfp_t *sfp _RIX)
         .fo = fo
     };
     NEOERR *err = cs_render(cs, &arg, render_cb);
-    // TODO: エラー処理
+	if (err != STATUS_OK) {
+		TRACE_NEOERR(_DeveloperFault, "cs_render");
+	}
     RETURNvoid_();
 }
 
@@ -574,6 +586,9 @@ static KMETHOD Cs_dump(CTX, ksfp_t *sfp _RIX)
         .fo = fo
     };
     NEOERR *err = cs_dump(cs, &arg, render_cb);
+	if (err != STATUS_OK) {
+		TRACE_NEOERR(_DeveloperFault, "cs_dump");
+	}
     RETURNvoid_();
 }
 
