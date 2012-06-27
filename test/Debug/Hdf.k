@@ -73,6 +73,7 @@ void test_readString() {
 	Hdf hdf = new Hdf();
 	hdf.readString("key = value\nabc {\ncde {\nefg = efg val\n}\n}");
 	System.p(hdf.writeString());
+	hdf.readString("/")
 }
 test_readString();
 

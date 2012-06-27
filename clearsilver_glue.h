@@ -32,7 +32,10 @@ extern "C" {
 #include <stdlib.h>
 #include <ClearSilver/ClearSilver.h>
 #include <ClearSilver/cgi/cgi.h>
+#include <ClearSilver/util/neo_err.h>
+#include <ClearSilver/util/neo_str.h>
 #include <konoha2/konoha2.h>
+#include <konoha2/logger.h>
 
 /* ======================================================================== */
 
@@ -56,6 +59,18 @@ typedef struct kHdf {
 
 #define S_kHdf(a)         ((kHdf *)a.o)
 #define S_HDF(a)          (((kHdf *)a.o)->hdf)
+
+#define TRACE_NEOERR(POLICY, ERR_AT)	do {\
+		STRING err_str;\
+		string_init(&err_str);\
+		nerr_error_string(err, &err_str);\
+		ktrace(_DeveloperFault,\
+				KEYVALUE_s("@", "hdf_set_value"),\
+				KEYVALUE_s("error_string", err_str.buf));\
+		nerr_ignore(&err);\
+		string_clear(&err_str);\
+} while(0)\
+
 
 static int malloc_cnt = 0;
 static int free_cnt = 0;
@@ -198,9 +213,17 @@ static KMETHOD Hdf_setValue(CTX, ksfp_t *sfp _RIX)
 	const char *name = S_text(sfp[1].s);
 	const char *value = S_text(sfp[2].s);
 
-	NEOERR *err;
-	err = hdf_set_value(hdf, name, value);
+	NEOERR *err = hdf_set_value(hdf, name, value);
 	// TODO: エラー処理
+	if (err != STATUS_OK) {
+		STRING err_str;
+		nerr_error_string(err, &err_str);
+		kString *s = new_kString(err_str.buf, strlen(err_str.buf), 0);
+		printf("%s\n", S_text(s));
+		ktrace(_SystemFault,
+				KEYVALUE_s("@", "hdf_set_value"),
+				KEYVALUE_s("errstr", s));
+	}
 	RETURNvoid_();
 }
 
@@ -333,7 +356,10 @@ static KMETHOD Hdf_readString(CTX, ksfp_t *sfp _RIX)
 	const char *data = S_text(sfp[1].s);
 	NEOERR *err;
 	err = hdf_read_string(hdf, data);
-	// TODO: エラー処理
+
+	if (err != STATUS_OK) {
+		TRACE_NEOERR(_DeveloperFault, "hdf_read_string");
+	}
 	RETURNvoid_();
 }
 
