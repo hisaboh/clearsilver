@@ -26,7 +26,7 @@ assert(test_parseFile());
 
 int render_callback(String s) {
 	System.p(s);
-	return 0;
+	return STATUS_OK;
 }
 
 void test_render() {
@@ -40,7 +40,7 @@ test_render();
 
 int dump_callback(String s) {
 	System.p(s);
-	return 0;
+	return STATUS_OK;
 }
 void test_dump() {
 	Hdf hdf = new Hdf();

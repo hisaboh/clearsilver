@@ -159,6 +159,7 @@ typedef struct kCs {
 	hdf_t *root_hdf_obj;
 } kCs;
 
+
 static void kCs_init(CTX, kObject *o, void *conf) 
 {
 	kCs *c = (kCs *)o;
@@ -545,19 +546,15 @@ static NEOERR *render_cb(void *v, char *s)
     KCALL(lsfp, 0, fo->mtd, 1, knull(CT_Int));
     END_LOCAL();
 
-    // KNH_SETv(ctx, lsfp[K_CALLDELTA + 1].o, new_String(ctx, s));
-    // knh_Func_invoke(ctx, fo, lsfp, 1/* argc */);
-    // END_LOCAL(ctx, lsfp);
-    // switch (lsfp[0].ivalue) {
-    // case STATUS_OK_INT:
-    //     return STATUS_OK;
-    // case INTERNAL_ERR_INT:
-    //     return INTERNAL_ERR;
-    // default:
-    //     /* unknow return value */
-    //     return STATUS_OK;
-    // }
-    return STATUS_OK;
+    switch (lsfp[0].ivalue) {
+    case STATUS_OK_INT:
+        return STATUS_OK;
+    case INTERNAL_ERR_INT:
+        return INTERNAL_ERR;
+    default:
+        /* unknow return value */
+        return STATUS_OK;
+    }
 }
 
 //## void Cs.render(Func<String=>int> cb);
@@ -696,11 +693,12 @@ static kbool_t clearsilver_initPackage(CTX, kKonohaSpace *ks, int argc, const ch
 
 // const definition
 //#define _KVi(T) #T, TY_Int, T
-//	KDEFINE_INT_CONST IntData[] = {
-//		{_KVi(SIGHUP)},
-//		{}
-//	};
-//	kKonohaSpace_loadConstData(kmodsugar->rootks, IntData, 0);
+	KDEFINE_INT_CONST IntData[] = {
+		{"STATUS_OK", TY_Int, STATUS_OK_INT},
+		{"INTERNAL_ERR", TY_Int, INTERNAL_ERR_INT},
+		{}
+	};
+	kKonohaSpace_loadConstData(ks, IntData, pline);
 
 	return true;
 }
