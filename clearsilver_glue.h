@@ -525,7 +525,7 @@ static NEOERR *render_cb(void *v, char *s)
     CTX = arg->ctx;
     kFunc *fo = arg->fo;
     BEGIN_LOCAL(lsfp, K_CALLDELTA + 2);
-    KSETv(lsfp[K_CALLDELTA+1].o, new_kString(s, strlen(s), 0));
+    KSETv(lsfp[K_CALLDELTA+1].s, new_kString(s, strlen(s), 0));
     KCALL(lsfp, 0, fo->mtd, 1, knull(CT_Int));
     END_LOCAL();
 
