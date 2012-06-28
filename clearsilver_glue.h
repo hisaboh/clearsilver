@@ -72,36 +72,20 @@ typedef struct kHdf {
 } while(0)\
 
 
-static int malloc_cnt = 0;
-static int free_cnt = 0;
-static int init_cnt = 0;
-static int destroy_cnt = 0;
-
-static void dump_memset() {
-	printf("malloc: %d, free: %d, init: %d, destroy: %d\n", malloc_cnt, free_cnt, init_cnt, destroy_cnt);
-}
-
 // 参照元がある場合はメモリ解放しない。すべての参照元がなくなってから解放。
 static void hdf_t_free(hdf_t *h)
 {
 	if (h == NULL) return;
 	h->refer_cnt--;
-	printf("refer_cnt:%d\n", h->refer_cnt);
 	if (h->refer_cnt == 0) {
 		hdf_destroy(&h->hdf);
-		destroy_cnt++;
 		free(h);
-		free_cnt++;
 	}
-	dump_memset();
 }
 static hdf_t* hdf_t_init() {
 	hdf_t *hdf_obj = (hdf_t *)(malloc(sizeof(hdf_t)));
-	malloc_cnt++;
 	hdf_init(&hdf_obj->hdf);
-	init_cnt++;
 	hdf_obj->refer_cnt = 0;
-	dump_memset();
 	return hdf_obj;
 }
 
@@ -203,7 +187,6 @@ static void kCgi_free(CTX, kObject *o)
 //## Hdf Hdf.new();
 static KMETHOD Hdf_new(CTX, ksfp_t *sfp _RIX)
 {
-	// printf("new:%p\n", sfp[K_RTNIDX].o);
 	RETURN_(new_kObject(O_ct(sfp[K_RTNIDX].o), 0));
 }
 
