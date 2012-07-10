@@ -111,6 +111,7 @@ static kHdf* Knew_Hdf(CTX, kclass_t *ct, HDF *hdf, kHdf *parent) {
 static void kHdf_init(CTX, kObject *o, void *conf)
 {
 	kHdf *h = (kHdf *)o;
+	// printf("kHdf_init: %p\n", o);
 	if (conf != NULL) {
 		hdf_conf_t *c = (hdf_conf_t *)conf;
 		h->hdf = c->hdf;
@@ -125,6 +126,7 @@ static void kHdf_init(CTX, kObject *o, void *conf)
 static void kHdf_free(CTX, kObject *o)
 {
 	kHdf *self = (kHdf *)o;
+	// printf("kHdf_free: %p\n", self);
 	if (self->hdf != self->root_hdf_obj->hdf) {
 		// HDF*がルートと同じ場合、ここでは解放せずルート側で解放する。
 		hdf_destroy(&self->hdf);
@@ -135,6 +137,7 @@ static void kHdf_free(CTX, kObject *o)
 }
 
 
+#define S_kCs(a)         	  ((kCs *)a.o)
 #define S_CSPARSE(a)          (((kCs *)a.o)->cs)
 
 typedef struct kCs {
@@ -187,6 +190,8 @@ static void kCgi_free(CTX, kObject *o)
 //## Hdf Hdf.new();
 static KMETHOD Hdf_new(CTX, ksfp_t *sfp _RIX)
 {
+	// printf("hogehoge");
+	// printf("Hdf_new: %p\n", sfp[0].o);
 	RETURN_(new_kObject(O_ct(sfp[K_RTNIDX].o), 0));
 }
 
@@ -485,6 +490,7 @@ static KMETHOD Hdf_setSymLink(CTX, ksfp_t *sfp _RIX)
 //## Cs Cs.new();
 static KMETHOD Cs_new(CTX, ksfp_t *sfp _RIX)
 {
+	// kCs *cs = S_kCs(sfp[0]);
 	kHdf *hdf = S_kHdf(sfp[1]);
 	RETURN_(new_kObject(O_ct(sfp[K_RTNIDX].o), hdf));
 }
@@ -604,7 +610,7 @@ static KMETHOD Cgi_htmlEscape(CTX, ksfp_t *sfp _RIX)
 #define CT_Cgi cCgi
 #define TY_Cgi cCgi->cid
 
-static kbool_t clearsilver_initPackage(CTX, kKonohaSpace *ks, int argc, const char **args, kline_t pline)
+static kbool_t clearsilver_initPackage(CTX, kNameSpace *ks, int argc, const char **args, kline_t pline)
 {
 // class definition
 	KDEFINE_CLASS defHdf = {
@@ -672,7 +678,7 @@ static kbool_t clearsilver_initPackage(CTX, kKonohaSpace *ks, int argc, const ch
 		_Public|_Static, _F(Cgi_htmlEscape), TY_String, TY_Cgi, MN_("htmlEscape")		, 1, TY_String, FN_("html"),
 		DEND,
 	};
-	kKonohaSpace_loadMethodData(ks, MethodData);
+	kNameSpace_loadMethodData(ks, MethodData);
 
 // const definition
 //#define _KVi(T) #T, TY_Int, T
@@ -681,22 +687,22 @@ static kbool_t clearsilver_initPackage(CTX, kKonohaSpace *ks, int argc, const ch
 		{"INTERNAL_ERR", TY_Int, INTERNAL_ERR_INT},
 		{}
 	};
-	kKonohaSpace_loadConstData(ks, IntData, pline);
+	kNameSpace_loadConstData(ks, IntData, pline);
 
 	return true;
 }
 
-static kbool_t clearsilver_setupPackage(CTX, kKonohaSpace *ks, kline_t pline)
+static kbool_t clearsilver_setupPackage(CTX, kNameSpace *ks, kline_t pline)
 {
 	return true;
 }
 
-static kbool_t clearsilver_initKonohaSpace(CTX,  kKonohaSpace *ks, kline_t pline)
+static kbool_t clearsilver_initNameSpace(CTX,  kNameSpace *ks, kline_t pline)
 {
 	return true;
 }
 
-static kbool_t clearsilver_setupKonohaSpace(CTX, kKonohaSpace *ks, kline_t pline)
+static kbool_t clearsilver_setupNameSpace(CTX, kNameSpace *ks, kline_t pline)
 {
 	return true;
 }

@@ -37,8 +37,8 @@ KDEFINE_PACKAGE* clearsilver_init(void)
 		KPACKNAME("lib.clearsilver", "0.1"),
 		.initPackage      = clearsilver_initPackage,
 		.setupPackage     = clearsilver_setupPackage,
-		.initKonohaSpace  = clearsilver_initKonohaSpace,
-		.setupKonohaSpace = clearsilver_setupKonohaSpace,
+		.initNameSpace  = clearsilver_initNameSpace,
+		.setupNameSpace = clearsilver_setupNameSpace,
 	};
 	return &d;
 }
