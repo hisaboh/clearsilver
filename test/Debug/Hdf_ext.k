@@ -1,5 +1,5 @@
 K.import("konoha.class");
-K.import("lib.clearsilver");
+K.import("clearsilver");
 
 boolean test_setValue() {
 	Hdf hdf = new Hdf();

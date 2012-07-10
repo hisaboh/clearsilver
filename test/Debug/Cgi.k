@@ -1,5 +1,5 @@
 K.import("konoha.class");
-K.import("lib.clearsilver");
+K.import("clearsilver");
 
 void test_urlEscape() {
 	System.p(Cgi.urlEscape("&"))

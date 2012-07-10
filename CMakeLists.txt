@@ -75,7 +75,7 @@ endmacro(add_konoha_package)
 
 # ============= #
 
-project(lib.clearsilver)
+project(clearsilver)
 
 find_path(HAVE_CLEARSILVER_H "ClearSilver/ClearSilver.h" PATHS ${INCLUDE_DIRS})
 
@@ -89,5 +89,5 @@ if(HAVE_CLEARSILVER_H)
 	set(PACKAGE_SOURCE_CODE clearsilver_glue.c)
 	set(PACKAGE_SCRIPT_CODE clearsilver_glue.k)
 	set(_PACKAGE_INCLUDE_DIR ${HAVE_CLEARSILVER_H}/ClearSilver)
-	add_konoha_package(lib.clearsilver)
+	add_konoha_package(clearsilver)
 endif(HAVE_CLEARSILVER_H)

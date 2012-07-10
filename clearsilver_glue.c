@@ -34,7 +34,7 @@ extern "C" {
 KDEFINE_PACKAGE* clearsilver_init(void)
 {
 	static KDEFINE_PACKAGE d = {
-		KPACKNAME("lib.clearsilver", "0.1"),
+		KPACKNAME("clearsilver", "0.1"),
 		.initPackage      = clearsilver_initPackage,
 		.setupPackage     = clearsilver_setupPackage,
 		.initNameSpace  = clearsilver_initNameSpace,
