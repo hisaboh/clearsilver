@@ -111,15 +111,17 @@ static kHdf* Knew_Hdf(CTX, kclass_t *ct, HDF *hdf, kHdf *parent) {
 static void kHdf_init(CTX, kObject *o, void *conf)
 {
 	kHdf *h = (kHdf *)o;
-	// printf("kHdf_init: %p\n", o);
+	// printf("kHdf_init: src=%p, conf=%p\n", o, conf);
 	if (conf != NULL) {
 		hdf_conf_t *c = (hdf_conf_t *)conf;
 		h->hdf = c->hdf;
 		attach_root_hdf_t(c->root_hdf_obj, &h->root_hdf_obj);
+		// printf("kHdf_init: ext root hdf=%p, root=%p\n", h->hdf, h->root_hdf_obj->hdf);
 	} else {
 		hdf_t *hdf_obj = hdf_t_init();
 		h->hdf = hdf_obj->hdf;
 		attach_root_hdf_t(hdf_obj, &h->root_hdf_obj);
+		// printf("kHdf_init: new root hdf=%p, root=%p\n", h->hdf, h->root_hdf_obj->hdf);
 	}
 }
 
@@ -150,12 +152,8 @@ typedef struct kCs {
 static void kCs_init(CTX, kObject *o, void *conf) 
 {
 	kCs *c = (kCs *)o;
-	kHdf *h = (kHdf *)conf;
-	if (h != NULL) {
-		attach_root_hdf_t(h->root_hdf_obj, &c->root_hdf_obj);
-		cs_init(&c->cs, h->hdf);
-		cgi_register_strfuncs(c->cs);
-	}
+	c->root_hdf_obj = NULL;
+	c->cs = NULL;
 }
 
 static void kCs_free(CTX, kObject *o) 
@@ -192,7 +190,8 @@ static KMETHOD Hdf_new(CTX, ksfp_t *sfp _RIX)
 {
 	// printf("hogehoge");
 	// printf("Hdf_new: %p\n", sfp[0].o);
-	RETURN_(new_kObject(O_ct(sfp[K_RTNIDX].o), 0));
+	// RETURN_(new_kObject(O_ct(sfp[K_RTNIDX].o), 0));
+	RETURN_(sfp[0].o);
 }
 
 //## void Hdf.setValue(String name, String value);
@@ -314,7 +313,10 @@ static KMETHOD Hdf_copy(CTX, ksfp_t *sfp _RIX)
 	HDF *hdf = S_HDF(sfp[0]);
 	const char *name = S_text(sfp[1].s);
 	HDF *src = S_HDF(sfp[2]);
+// printf("Hdf_copy1: %p:%p\n", hdf, src);
+// printf("Hdf_copy2: %p:%p\n", sfp[0].o, sfp[2].o);
 	NEOERR *err = hdf_copy(hdf, name, src);
+// printf("Hdf_copy3\n");
 
 	if (err != STATUS_OK) {
 		TRACE_NEOERR(_DeveloperFault, "hdf_get_node");
@@ -491,8 +493,12 @@ static KMETHOD Hdf_setSymLink(CTX, ksfp_t *sfp _RIX)
 static KMETHOD Cs_new(CTX, ksfp_t *sfp _RIX)
 {
 	// kCs *cs = S_kCs(sfp[0]);
-	kHdf *hdf = S_kHdf(sfp[1]);
-	RETURN_(new_kObject(O_ct(sfp[K_RTNIDX].o), hdf));
+	kHdf *h = S_kHdf(sfp[1]);
+	kCs *c = S_kCs(sfp[0]);
+	cs_init(&c->cs, h->hdf);
+	cgi_register_strfuncs(c->cs);
+	attach_root_hdf_t(h->root_hdf_obj, &c->root_hdf_obj);
+	RETURN_(c);
 }
 
 //## void Cs.parseString(String template)
